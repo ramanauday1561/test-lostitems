@@ -1,4 +1,5 @@
 import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
 import { useMemo, useState } from 'react';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 
@@ -98,13 +99,16 @@ export default function ForumScreen() {
                 </Text>
               </View>
 
-              <Text className="mt-3.5 font-sans-bold text-[16px] leading-[21.6px] tracking-[-0.32px] text-ink">
+              <Text
+                onPress={() => router.push(`/thread/${t.id}`)}
+                className="mt-3.5 font-sans-bold text-[16px] leading-[21.6px] tracking-[-0.32px] text-ink">
                 {t.title}
               </Text>
               <Text className="mt-2 font-sans text-[13px] leading-[21.5px] text-ink-muted">{t.body}</Text>
 
               <View className="mt-3.5 flex-row gap-2">
                 <Pressable
+                  onPress={() => router.push(`/thread/${t.id}`)}
                   accessibilityRole="button"
                   className="min-h-[44px] flex-row items-center gap-[7px] rounded-chip bg-subtle px-3.5 active:scale-[.96]">
                   <Icon name="chat_bubble" size={17} color="#16181F" />

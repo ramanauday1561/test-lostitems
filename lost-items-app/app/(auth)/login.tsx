@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import { useState } from 'react';
 import { Image, Pressable, Text, TextInput, View } from 'react-native';
 
@@ -79,7 +80,7 @@ export default function LoginScreen() {
             </View>
             <Text className="font-sans-md text-[13.5px] text-ink-muted">Remember me</Text>
           </Pressable>
-          <Pressable accessibilityRole="button" className="min-h-[44px] justify-center pl-2 active:opacity-60">
+          <Pressable onPress={() => router.push('/forgot')} accessibilityRole="button" className="min-h-[44px] justify-center pl-2 active:opacity-60">
             <Text className="font-sans-sb text-[13.5px] text-primary">Forgot password?</Text>
           </Pressable>
         </View>
@@ -164,7 +165,7 @@ export default function LoginScreen() {
 
         <View className="mt-5 flex-row items-center justify-center">
           <Text className="font-sans text-[13px] text-ink-muted">New here? </Text>
-          <Pressable accessibilityRole="button" className="min-h-[44px] justify-center active:opacity-70">
+          <Pressable onPress={() => router.push('/signup')} accessibilityRole="button" className="min-h-[44px] justify-center active:opacity-70">
             <Text className="font-sans-bold text-[13px] text-primary">Join free in 30 seconds</Text>
           </Pressable>
         </View>

@@ -23,6 +23,8 @@ export default function AppLayout() {
     : path.startsWith('/messages') ? 'messages'
     : path.startsWith('/moderation') ? 'moderation'
     : path.startsWith('/members') ? 'members'
+    : path.startsWith('/ads') ? 'ads'
+    : path.startsWith('/analysis') ? 'analysis'
     : 'dash';
 
   const [kicker, title] = SCREEN_TITLES[key] ?? ['', ''];

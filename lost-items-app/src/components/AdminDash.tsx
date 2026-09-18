@@ -1,0 +1,107 @@
+import { LinearGradient } from 'expo-linear-gradient';
+import { router } from 'expo-router';
+import { Pressable, ScrollView, Text, View } from 'react-native';
+
+import { AD_CAMPAIGNS, MODERATION_FLAGS, SCOUTS, money } from '../data/mockData';
+import { SHADOW } from '../design';
+import { Icon } from './Icon';
+
+export const AdminDash = () => {
+  const revenue = money(AD_CAMPAIGNS.reduce((s, a) => s + a.revenue, 0));
+  const live = AD_CAMPAIGNS.filter((a) => a.is_live).length;
+  const pending = MODERATION_FLAGS.length;
+
+  return (
+    <ScrollView>
+      <View className="gap-4 px-5 pb-8">
+        <Pressable
+          onPress={() => router.navigate('/ads')}
+          accessibilityRole="button"
+          className="min-h-[76px] flex-row items-center gap-[14px] rounded-panel bg-surface px-[18px] active:scale-[.985]"
+          style={{ boxShadow: SHADOW.prominent }}>
+          <View className="h-11 w-11 flex-none items-center justify-center rounded-chip bg-success/10">
+            <Icon name="payments" size={23} color="#0F7B3D" />
+          </View>
+          <View className="min-w-0 flex-1">
+            <Text className="font-sans-bold text-[15px] tracking-[-0.225px] text-ink">
+              Ad placements &amp; revenue
+            </Text>
+            <Text className="mt-[3px] font-sans-md text-[12px] text-ink-soft">
+              {revenue} this month · {live} live
+            </Text>
+          </View>
+          <Icon name="chevron_right" size={21} color="#c6c9ce" />
+        </Pressable>
+
+        {/* Inverse panel — DESIGN.md sec.2 */}
+        <View className="rounded-panel bg-panel p-5" style={{ boxShadow: SHADOW.darkPanel }}>
+          <View className="flex-row items-center gap-2">
+            <Icon name="flag" size={16} color="#FF8A80" />
+            <Text className="font-mono text-[10px] uppercase tracking-[1.4px] text-[rgba(255,255,255,0.5)]">
+              Needs moderation
+            </Text>
+          </View>
+          <View className="mt-3.5 flex-row items-end justify-between gap-3">
+            <View className="min-w-0 flex-1">
+              <Text className="font-sans-xb text-[44px] leading-[46px] tracking-[-2.2px] text-surface">
+                {pending}
+              </Text>
+              <Text className="mt-1 font-sans-md text-[12.5px] text-[rgba(255,255,255,0.55)]">
+                flagged posts
+              </Text>
+            </View>
+            <Pressable
+              onPress={() => router.navigate('/moderation')}
+              accessibilityRole="button"
+              className="min-h-[48px] items-center justify-center rounded-chip bg-[rgba(255,255,255,0.1)] px-5 active:scale-[.97]">
+              <Text className="font-sans-bold text-[13.5px] text-surface">Review</Text>
+            </Pressable>
+          </View>
+        </View>
+
+        <View className="rounded-panel bg-surface p-5" style={{ boxShadow: SHADOW.prominent }}>
+          <Text className="font-sans-xb text-[16px] tracking-[-0.32px] text-ink">857 new scouts today</Text>
+          <Text className="mb-4 mt-1.5 font-sans text-[12.5px] leading-[19.4px] text-ink-soft">
+            Send a welcome message to everyone joining the recovery network.
+          </Text>
+          <View className="flex-row items-center gap-2">
+            {SCOUTS.map((ini) => (
+              <LinearGradient
+                key={ini}
+                colors={['#F4F4F2', '#E7E7E3']}
+                start={{ x: 0.25, y: 0 }}
+                end={{ x: 0.75, y: 1 }}
+                style={{ width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
+                <Text className="font-mono text-[11px] text-ink-muted">{ini}</Text>
+              </LinearGradient>
+            ))}
+            <Pressable
+              onPress={() => router.navigate('/members')}
+              accessibilityRole="button"
+              accessibilityLabel="Open members"
+              className="h-11 w-11 items-center justify-center rounded-full bg-primary/10 active:scale-[.92]">
+              <Icon name="arrow_forward" size={20} color="#0B6BCB" />
+            </Pressable>
+          </View>
+        </View>
+
+        <Pressable
+          onPress={() => router.navigate('/analysis')}
+          accessibilityRole="button"
+          className="min-h-[76px] flex-row items-center gap-[14px] rounded-panel bg-surface px-[18px] active:scale-[.985]"
+          style={{ boxShadow: SHADOW.raised }}>
+          <View className="h-11 w-11 flex-none items-center justify-center rounded-chip bg-primary/10">
+            <Icon name="insights" size={23} color="#0B6BCB" />
+          </View>
+          <View className="min-w-0 flex-1">
+            <Text className="font-sans-bold text-[15px] tracking-[-0.225px] text-ink">Analysis</Text>
+            <Text className="mt-[3px] font-sans-md text-[12px] text-ink-soft">
+              Recovery rates and weekly activity
+            </Text>
+          </View>
+          <Icon name="chevron_right" size={21} color="#c6c9ce" />
+        </Pressable>
+      </View>
+    </ScrollView>
+  );
+};

@@ -109,7 +109,14 @@ function RootLayoutNav() {
             <Stack.Screen name="report" options={{ presentation: 'modal', headerShown: false }} />
             <Stack.Screen name="profile" options={{ presentation: 'modal', headerShown: false }} />
             <Stack.Screen name="messages/[id]" options={{ presentation: 'modal', headerShown: false }} />
+            <Stack.Screen name="thread/[id]" options={{ presentation: 'modal', headerShown: false }} />
+            <Stack.Screen name="support" options={{ presentation: 'modal', headerShown: false }} />
           </Stack.Protected>
+
+          {/* Unguarded: reachable from signup and from the member profile alike.
+              Declared last so it never wins the initial-route race when the
+              session flips and the guards re-resolve. */}
+          <Stack.Screen name="guidelines" options={{ presentation: 'modal', headerShown: false }} />
         </Stack>
       </Contained>
     </ThemeProvider>
