@@ -1,3 +1,14 @@
+import {
+  IBMPlexMono_600SemiBold,
+} from '@expo-google-fonts/ibm-plex-mono';
+import {
+  PublicSans_400Regular,
+  PublicSans_500Medium,
+  PublicSans_600SemiBold,
+  PublicSans_700Bold,
+  PublicSans_800ExtraBold,
+} from '@expo-google-fonts/public-sans';
+import MaterialIcons from '@expo/vector-icons/MaterialIcons';
 import { useFonts } from 'expo-font';
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
@@ -22,7 +33,15 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
-    SpaceMono: require('../assets/fonts/SpaceMono-Regular.ttf'),
+    // Family names match tailwind.config.js fontFamily tokens (DESIGN.md sec.3).
+    PublicSans: PublicSans_400Regular,
+    'PublicSans-Medium': PublicSans_500Medium,
+    'PublicSans-SemiBold': PublicSans_600SemiBold,
+    'PublicSans-Bold': PublicSans_700Bold,
+    'PublicSans-ExtraBold': PublicSans_800ExtraBold,
+    IBMPlexMono: IBMPlexMono_600SemiBold,
+    // Preloaded: vector-icons render invisible on first paint otherwise.
+    ...MaterialIcons.font,
   });
 
   // Expo Router uses Error Boundaries to catch errors in the navigation tree.

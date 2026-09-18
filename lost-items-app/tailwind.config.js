@@ -18,7 +18,17 @@ module.exports = {
         danger: '#B42318',
         'accent-dark': '#00E39B',
       },
-      fontFamily: { sans: ['PublicSans'], mono: ['IBMPlexMono'] },
+      // One family per weight: NativeWind's font-weight utilities do not swap the
+      // loaded font file, so DESIGN.md sec.3's 400-800 range needs explicit names.
+      // Avoids `font-medium`/`font-bold`, which collide with fontWeight utilities.
+      fontFamily: {
+        sans: ['PublicSans'],
+        'sans-md': ['PublicSans-Medium'],
+        'sans-sb': ['PublicSans-SemiBold'],
+        'sans-bold': ['PublicSans-Bold'],
+        'sans-xb': ['PublicSans-ExtraBold'],
+        mono: ['IBMPlexMono'],
+      },
       borderRadius: { bezel: '46px', panel: '26px', well: '36px', card: '22px', row: '18px', btn: '20px', chip: '12px' },
     },
   },
