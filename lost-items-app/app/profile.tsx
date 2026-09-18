@@ -88,6 +88,24 @@ export default function ProfileScreen() {
           </View>
         </View>
 
+        <View className="gap-2">
+          {[
+            { icon: 'shield', label: 'Safe meetup rules', href: '/guidelines' },
+            { icon: 'support_agent', label: 'Get help', href: '/support' },
+          ].map((r) => (
+            <Pressable
+              key={r.href}
+              onPress={() => router.push(r.href as never)}
+              accessibilityRole="button"
+              className="min-h-[56px] flex-row items-center gap-3 rounded-row bg-surface px-4 active:scale-[.985]"
+              style={{ boxShadow: SHADOW.resting }}>
+              <Icon name={r.icon} size={21} color="#0B6BCB" />
+              <Text className="flex-1 font-sans-sb text-[14px] text-ink">{r.label}</Text>
+              <Icon name="chevron_right" size={20} color="#c6c9ce" />
+            </Pressable>
+          ))}
+        </View>
+
         <Pressable
           onPress={() => { signOut(); router.replace('/welcome'); }}
           accessibilityRole="button"

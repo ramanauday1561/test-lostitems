@@ -7,11 +7,17 @@ import {
   COMMUNITY_COMMENTS, FOUND_ITEMS, SHORTCUTS, dashStats, displayStatus, formatDate, unreadTotal,
 } from '@/src/data/mockData';
 import { SHADOW, STATUS_HEX } from '@/src/design';
+import { AdminDash } from '@/src/components/AdminDash';
+import { FreshDash } from '@/src/components/FreshDash';
 import { useSession } from '@/src/session';
 
 export default function DashboardScreen() {
   const { session } = useSession();
-  const stats = dashStats(session?.role ?? 'member');
+  const role = session?.role ?? 'member';
+  // The prototype shows three different dashboards behind one "Home" tab.
+  if (role === 'admin') return <AdminDash />;
+  if (role === 'new') return <FreshDash />;
+  const stats = dashStats(role);
   const handedIn = FOUND_ITEMS.slice(0, 5);
   const unread = unreadTotal();
 

@@ -17,7 +17,7 @@ import {
 } from './schema.ts';
 
 export type {
-  AdCampaign, Conversation, Faq, ForumThread, ItemKind, ItemListRow, Message,
+  AdCampaign, Conversation, Faq, ForumReply, ForumThread, ItemKind, ItemListRow, Message,
   ModerationFlag, Profile, SupportMessage,
 } from './schema.ts';
 export { displayStatus } from './schema.ts';
@@ -343,7 +343,54 @@ export const SCREEN_TITLES: Record<string, [string, string]> = {
   moderation: ['Super admin', 'Moderation'],
   members: ['Super admin', 'Members'],
   ads: ['Monetization', 'Ad placements'],
+  analysis: ['Super admin', 'Analysis'],
 };
 
 export const unreadTotal = (): number =>
   CONVERSATIONS.reduce((n, c) => n + c.unread, 0);
+
+// -- Password strength (prototype's `strength` helper, shared by signup/reset) -
+
+export interface Strength { score: 0 | 1 | 2 | 3; color: string; label: string }
+
+export const strengthOf = (pw: string): Strength => {
+  const score: 0 | 1 | 2 | 3 =
+    pw.length === 0 ? 0
+    : pw.length < 8 ? 1
+    : /[^a-z0-9]/i.test(pw) && /\d/.test(pw) ? 3
+    : 2;
+  return {
+    score,
+    color: score >= 3 ? '#0F7B3D' : score === 2 ? '#C98A00' : '#B42318',
+    label:
+      score === 0 ? 'Use 8+ characters with a number and a symbol'
+      : score === 1 ? 'Too short — 8 characters minimum'
+      : score === 2 ? 'Good. Add a symbol to make it strong.'
+      : 'Strong password',
+  };
+};
+
+/** The three-stage reset flow's kicker, title and body. */
+export const RESET_COPY = {
+  email: ['Step 1 of 3', 'Reset your password', "Enter the email on your account and we'll send a 6-digit code to confirm it's you."],
+  code: ['Step 2 of 3', 'Check your inbox', 'Enter the 6-digit code we sent. It expires in 10 minutes.'],
+  reset: ['Step 3 of 3', 'Choose a new password', "Pick something you haven't used here before, then confirm it."],
+  done: ['All set', "You're back in", 'Your password has been changed.'],
+} as const;
+export type ResetStage = keyof typeof RESET_COPY;
+export const RESET_ORDER: ResetStage[] = ['email', 'code', 'reset', 'done'];
+
+/** Safe-meetup rules shown in the guidelines sheet. */
+export const GUIDELINE_RULES = [
+  { icon: 'public', title: 'Meet in public, in daylight', body: 'Police station lobbies, café counters and transit hubs are ideal. Never a home address, never a car park after dark.' },
+  { icon: 'group_add', title: 'Bring someone with you', body: "Tell a friend where you're going and when you expect to be back. Handovers take two minutes; a companion costs nothing." },
+  { icon: 'quiz', title: 'Verify before you hand over', body: "Ask the claimant to describe a detail that isn't in the listing — a scratch, a lock screen, what's in the side pocket." },
+  { icon: 'lock', title: 'Keep personal data off the post', body: 'No phone numbers, addresses, serial numbers or ID scans in listings or the forum. Use in-app chat for anything specific.' },
+  { icon: 'payments', title: 'No money changes hands', body: "Returns are free. Rewards, deposits and 'shipping fees' are the most common scam on the platform — report anyone who asks." },
+  { icon: 'chat', title: 'Be decent in the forum', body: 'No accusations, doxxing or pile-ons. Posts that break this are suspended by Super Admins and repeat accounts are removed.' },
+] as const;
+
+/** Weekday activity bars on the admin analysis screen. */
+export const ACTIVITY_BARS = [
+  ['M', 9], ['T', 13], ['W', 11], ['T', 18], ['F', 14], ['S', 8], ['S', 12],
+] as const;
