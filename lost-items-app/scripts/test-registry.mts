@@ -42,3 +42,12 @@ assert.strictEqual(formatDate('2024-06-05'), '05 Jun 2024');
 assert.strictEqual(formatDate('2024-05-31'), '31 May 2024');
 
 console.log('  [x] filterRegistry + displayStatus + formatDate — 19 assertions passed');
+
+// getItem backs app/item/[id].tsx — it resolves by short_code, not uuid.
+import { ITEMS, getItem } from '../src/data/mockData.ts';
+assert.strictEqual(getItem('LOST-1018')?.title, 'Grey tabby cat, no collar');
+assert.strictEqual(getItem('FOUND-2018')?.title, 'Black Wallet');
+assert.strictEqual(getItem('nope'), undefined);
+// every feed row must resolve, or a card tap dead-ends
+for (const row of ITEMS) assert.ok(getItem(row.short_code!), `${row.short_code} unresolvable`);
+console.log(`  [x] getItem — all ${ITEMS.length} rows resolve by short_code, unknown id returns undefined`);
