@@ -1,50 +1,39 @@
-import { SymbolView } from 'expo-symbols';
-import { Link, Tabs } from 'expo-router';
-import { Platform, Pressable } from 'react-native';
+import { Slot, usePathname } from 'expo-router';
+import { View } from 'react-native';
 
-import { Icon } from '@/src/components/Icon';
-import Colors from '@/constants/Colors';
-import { useColorScheme } from '@/components/useColorScheme';
-import { useClientOnlyValue } from '@/components/useClientOnlyValue';
+import { AppHeader } from '@/src/components/AppHeader';
+import { BottomNav } from '@/src/components/BottomNav';
+import { SCREEN_TITLES } from '@/src/data/mockData';
+import { useSession } from '@/src/session';
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+/**
+ * The prototype has one app shell — mono kicker + 26px title on top, floating
+ * nav pill at the bottom — rather than a platform tab bar, so this replaces
+ * <Tabs> with a Slot wrapped in that chrome.
+ */
+export default function AppLayout() {
+  const path = usePathname();
+  const { session } = useSession();
+
+  const key =
+    path === '/' ? (session?.role === 'admin' ? 'dashAdmin' : 'dash')
+    : path.startsWith('/lost') ? 'lost'
+    : path.startsWith('/found') ? 'found'
+    : path.startsWith('/forum') ? 'forum'
+    : path.startsWith('/messages') ? 'messages'
+    : path.startsWith('/moderation') ? 'moderation'
+    : path.startsWith('/members') ? 'members'
+    : 'dash';
+
+  const [kicker, title] = SCREEN_TITLES[key] ?? ['', ''];
 
   return (
-    <Tabs
-      screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme].tint,
-        // Disable the static render of the header on web
-        // to prevent a hydration error in React Navigation v6.
-        headerShown: useClientOnlyValue(false, true),
-      }}>
-      <Tabs.Screen
-        name="index"
-        options={{
-          title: 'Registry',
-          tabBarIcon: ({ color }) => <Icon name="travel_explore" size={26} color={color} />,
-          headerStyle: { backgroundColor: '#F2F2F0' },
-          headerShadowVisible: false,
-          headerTitleStyle: { fontFamily: 'PublicSans-ExtraBold', fontSize: 20, color: '#16181F' },
-        }}
-      />
-      <Tabs.Screen
-        name="two"
-        options={{
-          title: 'Tab Two',
-          tabBarIcon: ({ color }) => (
-            <SymbolView
-              name={{
-                ios: 'chevron.left.forwardslash.chevron.right',
-                android: 'code',
-                web: 'code',
-              }}
-              tintColor={color}
-              size={28}
-            />
-          ),
-        }}
-      />
-    </Tabs>
+    <View className="flex-1 bg-canvas">
+      <AppHeader kicker={kicker} title={title} />
+      <View className="min-h-0 flex-1">
+        <Slot />
+      </View>
+      <BottomNav />
+    </View>
   );
 }

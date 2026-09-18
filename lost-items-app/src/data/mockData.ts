@@ -299,3 +299,48 @@ export const initials = (handle: string): string => {
   const s = parts.length > 1 ? parts[0][0] + parts[parts.length - 1][0] : String(handle || '?').slice(0, 2);
   return s.toUpperCase();
 };
+
+// -- Member dashboard (prototype isUserDash) ----------------------------------
+
+export interface DashStat { value: string; label: string; color: string }
+
+/** Counters differ for a brand-new account, which has posted nothing. */
+export const dashStats = (role: Role): DashStat[] =>
+  role === 'new'
+    ? [
+        { value: '0', label: 'Active reports', color: '#a8acb2' },
+        { value: '0', label: 'Reunited', color: '#a8acb2' },
+        { value: '0', label: 'Forum posts', color: '#a8acb2' },
+      ]
+    : [
+        { value: '2', label: 'Active reports', color: '#0B6BCB' },
+        { value: '1', label: 'Reunited', color: '#0F7B3D' },
+        { value: '4', label: 'Forum posts', color: '#16181F' },
+      ];
+
+export const SHORTCUTS = [
+  { icon: 'travel_explore', title: 'Search lost items registry', desc: 'Browse recent lost reports from members in your city.', href: '/lost' },
+  { icon: 'storefront', title: 'Search found items registry', desc: 'Check if someone handed in what you are missing.', href: '/found' },
+  { icon: 'chat', title: 'Messages', desc: 'Your conversations with finders and owners.', href: '/messages' },
+] as const;
+
+export const COMMUNITY_COMMENTS = [
+  { ini: 'JO', user: 'Joyce', onItem: 'Rolex Submariner', time: '09:00 AM', text: 'Great news! I think I saw this matching description at the Central Station desk.' },
+  { ini: 'GL', user: 'Gladyce', onItem: 'MacBook Pro 16', time: '08:45 AM', text: 'Verified ownership serial number matches. Owner contacted successfully.' },
+] as const;
+
+/** Header kicker + title per screen, from the prototype's `titles` map. */
+export const SCREEN_TITLES: Record<string, [string, string]> = {
+  dash: ['Community member', 'My dashboard'],
+  dashAdmin: ['Super admin', 'System control'],
+  lost: ['Registry', 'Lost items'],
+  found: ['Registry', 'Found items'],
+  forum: ['Community', 'Forum'],
+  messages: ['Inbox', 'Messages'],
+  moderation: ['Super admin', 'Moderation'],
+  members: ['Super admin', 'Members'],
+  ads: ['Monetization', 'Ad placements'],
+};
+
+export const unreadTotal = (): number =>
+  CONVERSATIONS.reduce((n, c) => n + c.unread, 0);

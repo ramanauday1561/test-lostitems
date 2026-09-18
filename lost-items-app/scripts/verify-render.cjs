@@ -27,6 +27,8 @@ const EXPECT = [
   ['Card shadow applied', (m) => m.boxShadow && m.boxShadow !== 'none'],
   ['No zero-sized visible boxes', (m) => m.collapsed === 0],
   ['No runtime page errors across the flow', (m) => m.pageErrors.length === 0],
+  ['Bottom nav pill rendered', (m) => m.nav && m.nav.h >= 56],
+  ['Report FAB 52x52', (m) => m.fab && m.fab.w === 52 && m.fab.h === 52],
 ];
 
 const server = http.createServer((req, res) => {
@@ -53,6 +55,9 @@ const server = http.createServer((req, res) => {
   if (await skip.count()) { await skip.click(); await page.waitForTimeout(1200); }
   const quick = page.getByText('Simple User', { exact: true }).first();
   if (await quick.count()) { await quick.click(); await page.waitForTimeout(2000); }
+  // The registry moved off / to the Lost tab when the dashboard became home.
+  const lost = page.getByText('Lost', { exact: true }).first();
+  if (await lost.count()) { await lost.click(); await page.waitForTimeout(1500); }
 
   const m = await page.evaluate(() => {
     const t = [...document.querySelectorAll('*')]
@@ -75,7 +80,18 @@ const server = http.createServer((req, res) => {
       return e.children.length && (b.width === 0 || b.height === 0) &&
         s.backgroundColor !== 'rgba(0, 0, 0, 0)' && s.display !== 'none';
     }).length;
+    // Bottom nav pill + FAB
+    const fabEl = [...document.querySelectorAll('*')].find((e) => {
+      const b = e.getBoundingClientRect();
+      return Math.round(b.width) === 52 && Math.round(b.height) === 52 &&
+        getComputedStyle(e).backgroundColor === 'rgb(11, 107, 203)';
+    });
+    const navEl = fabEl && fabEl.parentElement;
+    const box = (el) => el ? { w: Math.round(el.getBoundingClientRect().width), h: Math.round(el.getBoundingClientRect().height) } : null;
+
     return {
+      nav: box(navEl),
+      fab: box(fabEl),
       card: { w: Math.round(r.width), h: Math.round(r.height) },
       padding: cs.padding, gap: cs.gap, borderRadius: cs.borderRadius,
       boxShadow: cs.boxShadow,
