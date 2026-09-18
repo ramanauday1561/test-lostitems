@@ -26,6 +26,7 @@ const EXPECT = [
   ['Image well 60x60 (not collapsed)', (m) => m.well && m.well.w === 60 && m.well.h === 60],
   ['Card shadow applied', (m) => m.boxShadow && m.boxShadow !== 'none'],
   ['No zero-sized visible boxes', (m) => m.collapsed === 0],
+  ['No runtime page errors across the flow', (m) => m.pageErrors.length === 0],
 ];
 
 const server = http.createServer((req, res) => {
@@ -42,8 +43,16 @@ const server = http.createServer((req, res) => {
   const url = `http://127.0.0.1:${server.address().port}/`;
   const b = await chromium.launch({ executablePath: CHROME, args: ['--no-sandbox'] });
   const page = await b.newPage({ viewport: { width: 660, height: 1400 } });
+  const pageErrors = [];
+  page.on('pageerror', (e) => pageErrors.push(String(e).slice(0, 160)));
   await page.goto(url, { waitUntil: 'networkidle', timeout: 60000 });
   await page.waitForTimeout(2000);
+
+  // The app now opens on onboarding; sign in so the registry is reachable.
+  const skip = page.getByText('Skip', { exact: true }).first();
+  if (await skip.count()) { await skip.click(); await page.waitForTimeout(1200); }
+  const quick = page.getByText('Simple User', { exact: true }).first();
+  if (await quick.count()) { await quick.click(); await page.waitForTimeout(2000); }
 
   const m = await page.evaluate(() => {
     const t = [...document.querySelectorAll('*')]
@@ -75,6 +84,7 @@ const server = http.createServer((req, res) => {
     };
   });
 
+  m.pageErrors = pageErrors;
   await b.close();
   server.close();
 

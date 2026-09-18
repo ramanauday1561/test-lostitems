@@ -84,3 +84,77 @@ export const filterRegistry = (
 
 export const getItem = (shortCode: string): ItemListRow | undefined =>
   ITEMS.find((i) => i.short_code === shortCode);
+
+// -- Onboarding & auth, from the prototype's SLIDES / quickLogins / socials ---
+
+export interface Slide {
+  tint: string;
+  kicker: string;
+  title: string;
+  body: string;
+}
+
+export const SLIDES: Slide[] = [
+  {
+    tint: '#E2ECF7',
+    kicker: 'Welcome to Lost Items Community',
+    title: "Lost Something? We'll Help You Find It!",
+    body: "Join thousands of people reuniting with their lost belongings every day. Report what you've found, search for what you've lost, and be part of a caring community.",
+  },
+  {
+    tint: '#EAF1E7',
+    kicker: 'How it works',
+    title: 'Simple, Fast & Effective',
+    body: 'Report found items in 30 seconds. Search our registry by category, location and date. Get instant notifications when a matching item is reported.',
+  },
+  {
+    tint: '#F5EDE2',
+    kicker: 'Why choose us',
+    title: 'Join 10,000+ Community Members!',
+    body: '100% free forever, instant notifications, and a trusted community with verified users, secure messaging and safe meetup guidelines.',
+  },
+];
+
+/** profiles.role, plus the prototype's "new" member state. */
+export type Role = 'admin' | 'member' | 'new';
+
+export interface QuickLogin {
+  name: string;
+  handle: string;
+  desc: string;
+  icon: string;
+  color: string;
+  tint: string;
+  role: Role;
+}
+
+export const QUICK_LOGINS: QuickLogin[] = [
+  { name: 'Super Admin', handle: 'superadmin', desc: 'Moderation queue and member controls', icon: 'shield', color: '#0B6BCB', tint: 'rgba(11,107,203,.1)', role: 'admin' },
+  { name: 'Simple User', handle: 'user', desc: 'Existing member with posts and chats', icon: 'person', color: '#0F7B3D', tint: 'rgba(15,123,61,.1)', role: 'member' },
+  { name: 'New User', handle: 'newuser', desc: 'Fresh account — nothing posted yet', icon: 'person_add', color: '#B4611D', tint: 'rgba(180,97,29,.12)', role: 'new' },
+];
+
+export const SOCIALS = [
+  { name: 'Google', mark: 'G', bg: '#fff', fg: '#101319', ring: true },
+  { name: 'Facebook', mark: 'f', bg: '#1877F2', fg: '#fff', ring: false },
+  { name: 'X', mark: 'X', bg: '#101319', fg: '#fff', ring: true },
+] as const;
+
+/** The prototype's password gate: only superadmin is actually checked. */
+export const ADMIN_PASSWORD = 'Password1!';
+
+export const roleFor = (username: string): Role => {
+  const u = username.trim().toLowerCase();
+  if (u === 'superadmin') return 'admin';
+  if (u === 'newuser' || u === 'new') return 'new';
+  return 'member';
+};
+
+/** Returns an error message, or null when the credentials pass. */
+export const signInError = (username: string, password: string): string | null => {
+  if (!username.trim() || !password) return 'Username and password are required.';
+  if (username.trim().toLowerCase() === 'superadmin' && password !== ADMIN_PASSWORD) {
+    return 'Invalid password for superadmin. Hint: Password1!';
+  }
+  return null;
+};

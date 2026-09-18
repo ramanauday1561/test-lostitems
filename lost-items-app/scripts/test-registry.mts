@@ -51,3 +51,18 @@ assert.strictEqual(getItem('nope'), undefined);
 // every feed row must resolve, or a card tap dead-ends
 for (const row of ITEMS) assert.ok(getItem(row.short_code!), `${row.short_code} unresolvable`);
 console.log(`  [x] getItem — all ${ITEMS.length} rows resolve by short_code, unknown id returns undefined`);
+
+// Auth gate, mirroring the prototype's submit()/quick() behaviour.
+import { QUICK_LOGINS, SLIDES, roleFor, signInError } from '../src/data/mockData.ts';
+assert.strictEqual(signInError('', ''), 'Username and password are required.');
+assert.strictEqual(signInError('user', ''), 'Username and password are required.');
+assert.match(signInError('superadmin', 'wrong')!, /Invalid password for superadmin/);
+assert.strictEqual(signInError('superadmin', 'Password1!'), null);
+assert.strictEqual(signInError('user', 'anything'), null);
+assert.strictEqual(roleFor('superadmin'), 'admin');
+assert.strictEqual(roleFor('newuser'), 'new');
+assert.strictEqual(roleFor('  SuperAdmin  '), 'admin'); // trimmed + case-insensitive
+assert.strictEqual(roleFor('j.rivera'), 'member');
+assert.strictEqual(SLIDES.length, 3);
+assert.strictEqual(QUICK_LOGINS.length, 3);
+console.log('  [x] auth gate — 11 assertions passed (signInError, roleFor, slide/login counts)');
