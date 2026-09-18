@@ -7,17 +7,18 @@ import { ItemCard } from '@/src/components/ItemCard';
 import {
   REGISTRY_FILTERS,
   filterRegistry,
-  type Item,
+  type ItemKind,
+  type ItemListRow,
   type RegistryFilter,
 } from '@/src/data/mockData';
 import { SHADOW, SHADOW_PILL_OFF, SHADOW_PILL_ON, SHADOW_SEARCH, SHADOW_SEG_ON } from '@/src/design';
 
 export default function RegistryScreen() {
-  const [kind, setKind] = useState<'Lost' | 'Found'>('Lost');
+  const [kind, setKind] = useState<ItemKind>('lost');
   const [filter, setFilter] = useState<RegistryFilter>('All');
   const [query, setQuery] = useState('');
 
-  const registry = useMemo<Item[]>(
+  const registry = useMemo<ItemListRow[]>(
     () => filterRegistry(kind, filter, query),
     [kind, filter, query]
   );
@@ -31,7 +32,7 @@ export default function RegistryScreen() {
         <View className="px-5 pb-2">
           {/* Lost / Found segmented control */}
           <View className="flex-row gap-1 rounded-[24px] bg-track p-1">
-            {(['Lost', 'Found'] as const).map((k) => {
+            {(['lost', 'found'] as const).map((k) => {
               const on = kind === k;
               return (
                 <Pressable
@@ -43,7 +44,7 @@ export default function RegistryScreen() {
                   style={on ? { boxShadow: SHADOW_SEG_ON } : undefined}>
                   <Text
                     className={`text-[13.5px] ${on ? 'font-sans-bold text-ink' : 'font-sans-sb text-ink-soft'}`}>
-                    {k} items
+                    {k === 'lost' ? 'Lost' : 'Found'} items
                   </Text>
                 </Pressable>
               );
@@ -97,7 +98,7 @@ export default function RegistryScreen() {
             <ItemCard
               key={item.id}
               item={item}
-              onPress={() => router.push(`/item/${item.id}`)}
+              onPress={() => router.push(`/item/${item.short_code}`)}
             />
           ))}
 

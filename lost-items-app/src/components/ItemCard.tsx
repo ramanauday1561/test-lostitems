@@ -1,7 +1,7 @@
 import { LinearGradient } from 'expo-linear-gradient';
 import { Pressable, Text, View } from 'react-native';
 
-import type { Item } from '../data/mockData';
+import { displayStatus, formatDate, type ItemListRow } from '../data/mockData';
 import { SHADOW, STATUS_HEX } from '../design';
 import { Icon } from './Icon';
 
@@ -9,13 +9,14 @@ import { Icon } from './Icon';
  * Registry row card, matching the prototype's markup:
  * 60px gradient well + title + location row + mono "ID · date" + status chip.
  */
-export const ItemCard = ({ item, onPress }: { item: Item; onPress?: () => void }) => {
-  const hue = STATUS_HEX[item.status];
+export const ItemCard = ({ item, onPress }: { item: ItemListRow; onPress?: () => void }) => {
+  const status = displayStatus(item);
+  const hue = STATUS_HEX[status];
   return (
     <Pressable
       onPress={onPress}
       accessibilityRole="button"
-      accessibilityLabel={`${item.title}, ${item.status}, ${item.location}`}
+      accessibilityLabel={`${item.title}, ${status}, ${item.location_text}`}
       className="w-full flex-row items-center gap-[14px] rounded-[24px] bg-surface p-3 active:scale-[.985]"
       style={{ boxShadow: SHADOW.raised }}>
       <LinearGradient
@@ -35,18 +36,18 @@ export const ItemCard = ({ item, onPress }: { item: Item; onPress?: () => void }
         <View className="mt-1 flex-row items-center gap-1">
           <Icon name="location_on" size={14} color="#8b8f95" />
           <Text numberOfLines={1} className="font-sans-md text-[12px] text-ink-soft">
-            {item.location}
+            {item.location_text}
           </Text>
         </View>
         <Text className="mt-[5px] font-mono text-[10px] tracking-[0.4px] text-ink-faintest">
-          {item.id} · {item.date}
+          {item.short_code} · {formatDate(item.date_occurred)}
         </Text>
       </View>
 
       <Text
         className="shrink-0 rounded-full px-[11px] py-[6px] font-sans-bold text-[11px]"
         style={{ color: hue, backgroundColor: `${hue}1A` }}>
-        {item.status}
+        {status}
       </Text>
     </Pressable>
   );

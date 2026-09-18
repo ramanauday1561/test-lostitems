@@ -1,31 +1,44 @@
 // Behaviour check for filterRegistry (the feed's only real logic).
 // Run: node --experimental-strip-types scripts/test-registry.mts
 import assert from 'node:assert';
-import { FOUND_ITEMS, LOST_ITEMS, filterRegistry, type Item } from '../src/data/mockData.ts';
+import {
+  FOUND_ITEMS, LOST_ITEMS, displayStatus, filterRegistry, formatDate,
+  type ItemListRow,
+} from '../src/data/mockData.ts';
 
-const ids = (rows: Item[]) => rows.map((r) => r.id);
+const ids = (rows: ItemListRow[]) => rows.map((r) => r.short_code);
 
 // Kind tab switches the source list.
-assert.deepStrictEqual(ids(filterRegistry('Lost', 'All', '')), ids(LOST_ITEMS));
-assert.deepStrictEqual(ids(filterRegistry('Found', 'All', '')), ids(FOUND_ITEMS));
+assert.deepStrictEqual(ids(filterRegistry('lost', 'All', '')), ids(LOST_ITEMS));
+assert.deepStrictEqual(ids(filterRegistry('found', 'All', '')), ids(FOUND_ITEMS));
 
 // Status filters.
-assert.deepStrictEqual(ids(filterRegistry('Lost', 'Reunited', '')), ['LOST-1018']);
-assert.deepStrictEqual(ids(filterRegistry('Lost', 'Active', '')), ['LOST-1029', 'LOST-1024']);
-assert.deepStrictEqual(ids(filterRegistry('Found', 'Resolved', '')), ['FOUND-1998']);
+assert.deepStrictEqual(ids(filterRegistry('lost', 'Reunited', '')), ['LOST-1018']);
+assert.deepStrictEqual(ids(filterRegistry('lost', 'Active', '')), ['LOST-1029', 'LOST-1024']);
+assert.deepStrictEqual(ids(filterRegistry('found', 'Resolved', '')), ['FOUND-1998']);
 
 // "My posts" is by author handle, not status.
-assert.deepStrictEqual(ids(filterRegistry('Lost', 'My posts', '')), ['LOST-1024']);
-assert.deepStrictEqual(ids(filterRegistry('Found', 'My posts', '')), []);
+assert.deepStrictEqual(ids(filterRegistry('lost', 'My posts', '')), ['LOST-1024']);
+assert.deepStrictEqual(ids(filterRegistry('found', 'My posts', '')), []);
 
 // Search spans title, location and id, case-insensitively, and trims.
-assert.deepStrictEqual(ids(filterRegistry('Lost', 'All', 'backpack')), ['LOST-1024']);
-assert.deepStrictEqual(ids(filterRegistry('Lost', 'All', 'oak street')), ['LOST-1018']);
-assert.deepStrictEqual(ids(filterRegistry('Lost', 'All', '  LOST-1031  ')), ['LOST-1031']);
-assert.deepStrictEqual(ids(filterRegistry('Lost', 'All', 'zzz')), []);
+assert.deepStrictEqual(ids(filterRegistry('lost', 'All', 'backpack')), ['LOST-1024']);
+assert.deepStrictEqual(ids(filterRegistry('lost', 'All', 'oak street')), ['LOST-1018']);
+assert.deepStrictEqual(ids(filterRegistry('lost', 'All', '  LOST-1031  ')), ['LOST-1031']);
+assert.deepStrictEqual(ids(filterRegistry('lost', 'All', 'zzz')), []);
 
 // Filter and search compose.
-assert.deepStrictEqual(ids(filterRegistry('Lost', 'Active', 'glasses')), ['LOST-1029']);
-assert.deepStrictEqual(ids(filterRegistry('Lost', 'Reunited', 'backpack')), []);
+assert.deepStrictEqual(ids(filterRegistry('lost', 'Active', 'glasses')), ['LOST-1029']);
+assert.deepStrictEqual(ids(filterRegistry('lost', 'Reunited', 'backpack')), []);
 
-console.log('  [x] filterRegistry — 13 assertions passed');
+// displayStatus derives the two labels SCHEMA.sql cannot store.
+assert.strictEqual(displayStatus(LOST_ITEMS[3]), 'Reunited');   // resolved + lost
+assert.strictEqual(displayStatus(FOUND_ITEMS[3]), 'Resolved');  // resolved + found
+assert.strictEqual(displayStatus(LOST_ITEMS[0]), 'Flagged');    // moderation pending + flagged
+assert.strictEqual(displayStatus(LOST_ITEMS[1]), 'Active');
+
+// formatDate renders SCHEMA.sql dates the way the prototype does.
+assert.strictEqual(formatDate('2024-06-05'), '05 Jun 2024');
+assert.strictEqual(formatDate('2024-05-31'), '31 May 2024');
+
+console.log('  [x] filterRegistry + displayStatus + formatDate — 19 assertions passed');

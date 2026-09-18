@@ -25,7 +25,7 @@ const SPECS = {
     ['Well glyph 26px #b7bbc1', /size=\{26\} color="#b7bbc1"/],
     ['Card title 700 15px, truncated', /numberOfLines=\{1\}[\s\S]{0,90}text-\[15px\]/],
     ['location_on row 14px', /name="location_on" size=\{14\}/],
-    ['Mono ID · date line', /\{item\.id\} · \{item\.date\}/],
+    ['Mono ID · date line', /\{item\.short_code\} · \{formatDate\(item\.date_occurred\)\}/],
     ['Status chip, 10% tint', /\$\{hue\}1A/],
     ['Card raised shadow', /SHADOW\.raised/],
     ['Card press scale .985', /active:scale-\[\.985\]/],
@@ -33,7 +33,8 @@ const SPECS = {
     ['Empty: post_add glyph in blue tint', /name="post_add"[\s\S]{0,40}#0B6BCB/],
     ['Empty: "Report an item" CTA', /Report an item/],
     ['Empty: no-match copy', /No records match that search\./],
-    ['Search matches title \+ location \+ id', /\$\{i\.title\} \$\{i\.location\} \$\{i\.id\}/],
+    ['Search matches title + location + id', /\$\{i\.title\} \$\{i\.location_text\} \$\{i\.short_code\}/],
+    ['Status label derived, not stored (SCHEMA.sql)', /displayStatus/],
   ],
 };
 
