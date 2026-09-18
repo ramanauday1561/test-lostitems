@@ -104,10 +104,11 @@ function RootLayoutNav() {
           {/* DESIGN.md sec.9 calls a full-page route for a secondary flow an
               anti-pattern, so the item route that INSTRUCTIONS 3.1 requires is
               presented as a sheet. */}
-            <Stack.Screen
-              name="item/[id]"
-              options={{ presentation: 'modal', headerShown: false }}
-            />
+            {/* DESIGN.md sec.9: secondary flows arrive as sheets, not pages. */}
+            <Stack.Screen name="item/[id]" options={{ presentation: 'modal', headerShown: false }} />
+            <Stack.Screen name="report" options={{ presentation: 'modal', headerShown: false }} />
+            <Stack.Screen name="profile" options={{ presentation: 'modal', headerShown: false }} />
+            <Stack.Screen name="messages/[id]" options={{ presentation: 'modal', headerShown: false }} />
           </Stack.Protected>
         </Stack>
       </Contained>
