@@ -13,6 +13,7 @@ import { useFonts } from 'expo-font';
 import { DarkTheme, DefaultTheme, Stack, ThemeProvider } from 'expo-router';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect } from 'react';
+import { Platform, View } from 'react-native';
 import 'react-native-reanimated';
 import '../global.css';
 
@@ -62,15 +63,41 @@ export default function RootLayout() {
   return <RootLayoutNav />;
 }
 
+/**
+ * CLAUDE.md sec.2: clamp the app to a phone-width column on wide screens so the
+ * browser keeps the native feel. No-op on iOS and Android.
+ */
+function Contained({ children }: { children: React.ReactNode }) {
+  if (Platform.OS !== 'web') return <>{children}</>;
+  return (
+    <View className="flex-1 bg-canvas">
+      <View
+        className="mx-auto w-full max-w-md flex-1 bg-canvas"
+        style={{ boxShadow: '0 40px 80px -20px rgba(22,24,31,.35)' }}>
+        {children}
+      </View>
+    </View>
+  );
+}
+
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack>
-        <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
-      </Stack>
+      <Contained>
+        <Stack>
+          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+          <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+          {/* DESIGN.md sec.9 calls a full-page route for a secondary flow an
+              anti-pattern, so the item route that INSTRUCTIONS 3.1 requires is
+              presented as a sheet. */}
+          <Stack.Screen
+            name="item/[id]"
+            options={{ presentation: 'modal', headerShown: false }}
+          />
+        </Stack>
+      </Contained>
     </ThemeProvider>
   );
 }

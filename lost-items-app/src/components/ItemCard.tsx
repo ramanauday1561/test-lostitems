@@ -19,11 +19,20 @@ export const ItemCard = ({ item, onPress }: { item: ItemListRow; onPress?: () =>
       accessibilityLabel={`${item.title}, ${status}, ${item.location_text}`}
       className="w-full flex-row items-center gap-[14px] rounded-[24px] bg-surface p-3 active:scale-[.985]"
       style={{ boxShadow: SHADOW.raised }}>
+      {/* Verified: NativeWind drops className on LinearGradient even when the
+          class is generated — third-party components need cssInterop. Use its
+          own style prop instead. */}
       <LinearGradient
         colors={['#F4F4F2', '#E9E9E5']}
         start={{ x: 0.25, y: 0 }}
         end={{ x: 0.75, y: 1 }}
-        className="h-[60px] w-[60px] items-center justify-center rounded-[20px]">
+        style={{
+          width: 60,
+          height: 60,
+          borderRadius: 20,
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
         <Icon name={item.icon} size={26} color="#b7bbc1" />
       </LinearGradient>
 

@@ -36,6 +36,26 @@ const SPECS = {
     ['Search matches title + location + id', /\$\{i\.title\} \$\{i\.location_text\} \$\{i\.short_code\}/],
     ['Status label derived, not stored (SCHEMA.sql)', /displayStatus/],
   ],
+  detail: [
+    ['196px hero image well', /h-\[196px\]/],
+    ['Well gradient #F4F4F2 -> #E9E9E5', /'#F4F4F2', '#E9E9E5'/],
+    ['Hero glyph 52px #b7bbc1', /size=\{52\} color="#b7bbc1"/],
+    ['"photo submitted with the record" caption', /photo submitted with the record/],
+    ['Mono short_code line', /\{item\.short_code\}/],
+    ['Status chip, 10% tint', /\$\{hue\}1A/],
+    ['Title 800 25px, tight tracking', /font-sans-xb text-\[25px\][\s\S]{0,40}tracking-\[-0\.8px\]/],
+    ['Description 400 14.5px/1.65', /text-\[14\.5px\] leading-\[24px\]/],
+    ['Detail rows card on subtle bg', /bg-subtle/],
+    ['4 rows: Status/Where/When/Submitted by', /'Status'[\s\S]{0,200}'Submitted by'/],
+    ['Row min-height 48px', /min-h-\[48px\]/],
+    ['Owner block, blue 7% tint', /bg-primary\/\[0\.07\]/],
+    ['Owner how_to_reg glyph', /name="how_to_reg"/],
+    ['Owner hint copy, both states', /Handed over\.[\s\S]{0,200}stops searching/],
+    ['Claim CTA label by kind', /This is mine[\s\S]{0,60}I have found this/],
+    ['Claim CTA uses primary button shadow', /SHADOW\.primaryButton/],
+    ['Back control 44px, bare', /h-11 w-11[\s\S]{0,80}active:scale-\[\.92\]/],
+    ['Not-found fallback for bad id', /Record not found/],
+  ],
 };
 
 const spec = SPECS[label];
