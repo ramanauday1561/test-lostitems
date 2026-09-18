@@ -46,11 +46,18 @@ export default function ItemDetailScreen() {
       </View>
 
       <ScrollView contentContainerClassName="px-5 pb-8 pt-2">
+        {/* className is dropped on LinearGradient (see ItemCard). */}
         <LinearGradient
           colors={['#F4F4F2', '#E9E9E5']}
           start={{ x: 0.25, y: 0 }}
           end={{ x: 0.75, y: 1 }}
-          className="h-[196px] items-center justify-center gap-2.5 rounded-[24px]">
+          style={{
+            height: 196,
+            borderRadius: 24,
+            alignItems: 'center',
+            justifyContent: 'center',
+            gap: 10,
+          }}>
           <Icon name={item.icon} size={52} color="#b7bbc1" />
           <Text className="font-mono text-[10px] tracking-[0.6px] text-ink-faintest">
             photo submitted with the record
