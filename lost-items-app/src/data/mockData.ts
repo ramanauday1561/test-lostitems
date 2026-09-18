@@ -16,7 +16,10 @@ import {
   type SupportMessage,
 } from './schema.ts';
 
-export type { ItemKind, ItemListRow } from './schema.ts';
+export type {
+  AdCampaign, Conversation, Faq, ForumThread, ItemKind, ItemListRow, Message,
+  ModerationFlag, Profile, SupportMessage,
+} from './schema.ts';
 export { displayStatus } from './schema.ts';
 
 /** categories.name / categories.icon, in categories.sort_order. */
