@@ -11,6 +11,8 @@ module.exports = {
         surface: '#fff',
         ink: { DEFAULT: '#16181F', muted: '#6B7280', soft: '#8b8f95', faint: '#9a9ea4', faintest: '#a8acb2' },
         divider: '#DEDDD8',
+        track: '#E7E7E3', // segmented-control track, from the prototype
+        well: { from: '#F4F4F2', to: '#E9E9E5' }, // image-well gradient, DESIGN.md sec.2
         panel: '#101319',
         primary: '#0B6BCB',
         success: '#0F7B3D',

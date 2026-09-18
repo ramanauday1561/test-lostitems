@@ -1,10 +1,11 @@
 import MaterialIcons from '@expo/vector-icons/MaterialIcons';
+import type { ColorValue } from 'react-native';
 
 type Props = {
   /** Material Symbols name as written in the prototype, e.g. "account_balance_wallet". */
   name: string;
   size?: number;
-  color?: string;
+  color?: ColorValue;
 };
 
 /**

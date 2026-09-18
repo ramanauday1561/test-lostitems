@@ -72,3 +72,28 @@ export const MEMBERS: User[] = [
 export const CURRENT_USER: User = MEMBERS[3];
 
 export const getItem = (id: string): Item | undefined => ITEMS.find((i) => i.id === id);
+
+/** Handle of the prototype's signed-in non-admin user, used by the "My posts" filter. */
+export const ME = 'simple.user';
+
+export const REGISTRY_FILTERS = ['All', 'My posts', 'Active', 'Reunited', 'Resolved'] as const;
+export type RegistryFilter = (typeof REGISTRY_FILTERS)[number];
+
+/** Registry list for the feed: kind tab, then filter, then free-text search. */
+export const filterRegistry = (
+  kind: ItemKind,
+  filter: RegistryFilter,
+  query: string
+): Item[] => {
+  const source = kind === 'Lost' ? LOST_ITEMS : FOUND_ITEMS;
+  const byFilter =
+    filter === 'All' ? source
+    : filter === 'My posts' ? source.filter((i) => i.by === ME)
+    : source.filter((i) => i.status === filter);
+
+  const q = query.trim().toLowerCase();
+  if (!q) return byFilter;
+  return byFilter.filter((i) =>
+    `${i.title} ${i.location} ${i.id}`.toLowerCase().includes(q)
+  );
+};
