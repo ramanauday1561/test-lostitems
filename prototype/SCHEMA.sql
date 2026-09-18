@@ -6,12 +6,13 @@ create type user_role as enum ('member', 'admin');
 create type contact_pref as enum ('after_match', 'always', 'never');
 create type device_platform as enum ('ios', 'android');
 create type item_kind as enum ('lost', 'found');
-create type item_status as enum ('active', 'resolved', 'removed');
+create type item_status as enum ('active', 'resolved', 'reunited', 'removed');
 create type moderation_status as enum ('pending', 'approved', 'removed');
 create type match_status as enum ('proposed', 'confirmed', 'rejected');
 create type ticket_status as enum ('bot', 'escalated', 'closed');
 create type message_sender as enum ('user', 'bot', 'agent');
 create type screen_slot as enum ('home', 'registry', 'forum', 'report_success');
+create type forum_tag as enum ('sighting', 'reunited', 'question');
 create type notification_type as enum ('message', 'forum_reply', 'item_match', 'moderation', 'system');
 
 -- 1. Profiles & Contacts
@@ -62,6 +63,9 @@ create table items (
   description text not null,
   category_id uuid references categories(id) on delete set null,
   location_text text not null,
+  -- Per-item glyph. categories.icon is the fallback, but the prototype overrides
+  -- it per record, so a category icon alone cannot reproduce the registry.
+  icon text,
   latitude numeric(9,6),
   longitude numeric(9,6),
   date_occurred date not null,
@@ -131,6 +135,9 @@ create table forum_threads (
   id uuid primary key default uuid_generate_v4(),
   author_id uuid not null references profiles(id) on delete cascade,
   topic text not null,
+  tag forum_tag not null default 'question',
+  -- Second half of the thread meta line, e.g. "09:00 AM . Central district".
+  location_text text,
   title text not null,
   body text not null,
   helpful_count int default 0 not null,
@@ -214,6 +221,8 @@ create table faqs (
   id uuid primary key default uuid_generate_v4(),
   question text not null,
   answer text not null,
+  -- Match terms for the support assistant's lookup.
+  keywords text[] default '{}'::text[] not null,
   sort_order int default 0 not null
 );
 
@@ -224,7 +233,14 @@ create table ad_campaigns (
   advertiser_name text not null,
   campaign_name text not null,
   screen_slot screen_slot not null,
+  -- Human-readable placement, e.g. "Below community activity".
+  slot_description text,
   format text not null,
+  -- Creative size as shown in the manager, e.g. "320 x 104" or "In-feed".
+  size text,
+  icon text,
+  -- Rate card in whole currency units per thousand impressions.
+  cpm numeric(10,2),
   start_date date not null,
   end_date date not null,
   is_live boolean default true not null
@@ -249,4 +265,16 @@ create table notifications (
   body text not null,
   is_read boolean default false not null,
   created_at timestamptz default now() not null
+);
+
+-- 9. Onboarding
+create table onboarding_slides (
+  id uuid primary key default uuid_generate_v4(),
+  kicker text not null,
+  title text not null,
+  body text not null,
+  -- Panel tint behind the illustration.
+  tint text not null,
+  image_path text not null,
+  sort_order int default 0 not null
 );

@@ -18,6 +18,7 @@ import 'react-native-reanimated';
 import '../global.css';
 
 import { useColorScheme } from '@/components/useColorScheme';
+import { SessionProvider, useSession } from '@/src/session';
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -26,7 +27,7 @@ export {
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: '(tabs)',
+  initialRouteName: '(auth)',
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -60,7 +61,11 @@ export default function RootLayout() {
     return null;
   }
 
-  return <RootLayoutNav />;
+  return (
+    <SessionProvider>
+      <RootLayoutNav />
+    </SessionProvider>
+  );
 }
 
 /**
@@ -82,20 +87,28 @@ function Contained({ children }: { children: React.ReactNode }) {
 
 function RootLayoutNav() {
   const colorScheme = useColorScheme();
+  const { session } = useSession();
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Contained>
-        <Stack>
-          <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+        <Stack screenOptions={{ headerShown: false }}>
+          {/* Signed out sees onboarding and login; signed in sees the app. */}
+          <Stack.Protected guard={!session}>
+            <Stack.Screen name="(auth)" />
+          </Stack.Protected>
+
+          <Stack.Protected guard={!!session}>
+            <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
           <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
           {/* DESIGN.md sec.9 calls a full-page route for a secondary flow an
               anti-pattern, so the item route that INSTRUCTIONS 3.1 requires is
               presented as a sheet. */}
-          <Stack.Screen
-            name="item/[id]"
-            options={{ presentation: 'modal', headerShown: false }}
-          />
+            <Stack.Screen
+              name="item/[id]"
+              options={{ presentation: 'modal', headerShown: false }}
+            />
+          </Stack.Protected>
         </Stack>
       </Contained>
     </ThemeProvider>

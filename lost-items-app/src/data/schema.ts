@@ -11,8 +11,9 @@ export type UserRole = 'member' | 'admin';
 export type ContactPref = 'after_match' | 'always' | 'never';
 export type DevicePlatform = 'ios' | 'android';
 export type ItemKind = 'lost' | 'found';
-export type ItemStatus = 'active' | 'resolved' | 'removed';
+export type ItemStatus = 'active' | 'resolved' | 'reunited' | 'removed';
 export type ModerationStatus = 'pending' | 'approved' | 'removed';
+export type ForumTag = 'sighting' | 'reunited' | 'question';
 export type MatchStatus = 'proposed' | 'confirmed' | 'rejected';
 export type TicketStatus = 'bot' | 'escalated' | 'closed';
 export type MessageSender = 'user' | 'bot' | 'agent';
@@ -88,14 +89,103 @@ export interface ItemListRow
 export type DisplayStatus = 'Active' | 'Resolved' | 'Reunited' | 'Flagged';
 
 /**
- * SCHEMA.sql has no Reunited or Flagged in item_status. In the prototype data
- * Reunited only ever occurs on lost items and Resolved only on found ones, so
- * the label falls out of status + kind, with moderation taking precedence.
+ * item_status now carries 'reunited' (the prototype lets an owner set it), so
+ * the label is the stored status title-cased. Flagged is still derived:
+ * it is a moderation state, not an item state.
  */
 export const displayStatus = (
-  row: Pick<ItemListRow, 'status' | 'kind' | 'moderation_status' | 'flagged_count'>
+  row: Pick<ItemListRow, 'status' | 'moderation_status' | 'flagged_count'>
 ): DisplayStatus => {
   if (row.moderation_status === 'pending' && row.flagged_count > 0) return 'Flagged';
-  if (row.status === 'resolved') return row.kind === 'lost' ? 'Reunited' : 'Resolved';
-  return 'Active';
+  if (row.status === 'removed') return 'Active';
+  return (row.status.charAt(0).toUpperCase() + row.status.slice(1)) as DisplayStatus;
 };
+
+// -- Rows for the remaining prototype surfaces --------------------------------
+
+/** public.forum_threads + author + reply rows. */
+export interface ForumReply {
+  id: number;
+  author_username: string;
+  author_name: string;
+  body: string;
+  created_at: string;
+}
+
+export interface ForumThread {
+  id: number;
+  author_username: string;
+  author_name: string;
+  tag: ForumTag;
+  topic: string;
+  title: string;
+  body: string;
+  /** Time half of the meta line, e.g. "09:00 AM" or "Yesterday". */
+  created_at: string;
+  location_text: string | null;
+  helpful_count: number;
+  is_removed: boolean;
+  replies: ForumReply[];
+}
+
+/** public.ad_campaigns joined with its aggregated ad_stats. */
+export interface AdCampaign {
+  short_code: string;
+  advertiser_name: string;
+  campaign_name: string;
+  screen_slot: ScreenSlot;
+  slot_description: string;
+  format: string;
+  size: string;
+  icon: string;
+  cpm: number;
+  days: number;
+  days_left: number;
+  is_live: boolean;
+  impressions: number;
+  clicks: number;
+  revenue: number;
+}
+
+/** public.moderation_flags joined with its target. */
+export interface ModerationFlag {
+  target_code: string;
+  target_type: 'item' | 'thread';
+  title: string;
+  author_username: string;
+  category: string;
+  reason: string;
+  created_at: string;
+}
+
+/** public.messages within a conversation. */
+export interface Message {
+  sender: 'me' | 'them';
+  body: string;
+  created_at: string;
+}
+
+/** public.conversations joined with its item and counterpart. */
+export interface Conversation {
+  item_short_code: string;
+  with_username: string;
+  item_title: string;
+  icon: string;
+  unread: number;
+  last_message_at: string;
+  messages: Message[];
+}
+
+/** public.faqs */
+export interface Faq {
+  question: string;
+  answer: string;
+  keywords: string[];
+}
+
+/** public.support_messages */
+export interface SupportMessage {
+  sender: MessageSender;
+  body: string;
+  created_at: string;
+}
