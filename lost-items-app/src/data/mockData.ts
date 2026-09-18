@@ -4,9 +4,16 @@
 // Phase 5 data-parity check still compares like for like.
 import {
   displayStatus,
+  type AdCampaign,
+  type Conversation,
+  type Faq,
+  type ForumThread,
   type ItemKind,
   type ItemListRow,
+  type Message,
+  type ModerationFlag,
   type Profile,
+  type SupportMessage,
 } from './schema.ts';
 
 export type { ItemKind, ItemListRow } from './schema.ts';
@@ -36,7 +43,7 @@ export const LOST_ITEMS: ItemListRow[] = [
   { id: '22222222-0000-4000-8000-000000001031', short_code: 'LOST-1031', kind: 'lost', title: 'Samsung Galaxy S24', location_text: 'Bus 14, evening route', date_occurred: '2024-06-05', status: 'active', moderation_status: 'pending', flagged_count: 1, icon: 'smartphone', category_name: 'Electronics', reporter_username: 'alex.j', description: 'Left on the rack above the seat. Black case, cracked corner.' },
   { id: '22222222-0000-4000-8000-000000001029', short_code: 'LOST-1029', kind: 'lost', title: 'Prescription glasses', location_text: 'City library, 2nd floor', date_occurred: '2024-06-04', status: 'active', moderation_status: 'approved', flagged_count: 0, icon: 'visibility', category_name: 'Other', reporter_username: 'm.okafor', description: 'Tortoise frames in a hard black case.' },
   { id: '22222222-0000-4000-8000-000000001024', short_code: 'LOST-1024', kind: 'lost', title: 'Blue Jansport backpack', location_text: 'Central Station platform 3', date_occurred: '2024-06-02', status: 'active', moderation_status: 'approved', flagged_count: 0, icon: 'backpack', category_name: 'Bags', reporter_username: 'simple.user', description: 'Notebook and a grey hoodie inside.' },
-  { id: '22222222-0000-4000-8000-000000001018', short_code: 'LOST-1018', kind: 'lost', title: 'Grey tabby cat, no collar', location_text: 'Oak Street', date_occurred: '2024-05-29', status: 'resolved', moderation_status: 'approved', flagged_count: 0, icon: 'pets', category_name: 'Pets', reporter_username: 'd.pham', description: 'Answers to Miso. Found by a neighbour two streets away.' },
+  { id: '22222222-0000-4000-8000-000000001018', short_code: 'LOST-1018', kind: 'lost', title: 'Grey tabby cat, no collar', location_text: 'Oak Street', date_occurred: '2024-05-29', status: 'reunited', moderation_status: 'approved', flagged_count: 0, icon: 'pets', category_name: 'Pets', reporter_username: 'd.pham', description: 'Answers to Miso. Found by a neighbour two streets away.' },
 ];
 
 export const ITEMS: ItemListRow[] = [...LOST_ITEMS, ...FOUND_ITEMS];
@@ -157,4 +164,138 @@ export const signInError = (username: string, password: string): string | null =
     return 'Invalid password for superadmin. Hint: Password1!';
   }
   return null;
+};
+
+// -- Forum (prototype THREADS) ------------------------------------------------
+
+export const FORUM_THREADS: ForumThread[] = [
+  {
+    id: 1, author_username: 'joyce', author_name: 'Joyce', tag: 'sighting', topic: 'Sightings',
+    created_at: '09:00 AM', location_text: 'Central district', helpful_count: 0, is_removed: false,
+    title: 'Rolex Submariner — possible match at Central Station',
+    body: 'Great news! I think I saw this matching description at the Central Station desk. Worth calling before you travel over.',
+    replies: [
+      { id: 1, author_username: 'marcus', author_name: 'Marcus', created_at: '09:14 AM', body: 'I was there this morning — the desk does hold watches in a sealed bag. Ask for the lost property window, not the ticket office.' },
+      { id: 2, author_username: 'joyce', author_name: 'Joyce', created_at: '09:22 AM', body: 'Exactly. Bring ID and anything with the serial on it, they check before handing anything over.' },
+      { id: 3, author_username: 'priya', author_name: 'Priya', created_at: '10:03 AM', body: 'Called them, they still have it. Owner has been notified through the app.' },
+    ],
+  },
+  {
+    id: 2, author_username: 'gladyce', author_name: 'Gladyce', tag: 'reunited', topic: 'Reunited',
+    created_at: '08:45 AM', location_text: 'Verified', helpful_count: 0, is_removed: false,
+    title: 'MacBook Pro 16 returned to its owner',
+    body: 'Verified ownership serial number matches. Owner contacted successfully and collected it this morning.',
+    replies: [
+      { id: 1, author_username: 'elbert', author_name: 'Elbert', created_at: '09:02 AM', body: 'This is the third laptop reunited this month. The serial check makes it so much easier.' },
+      { id: 2, author_username: 'owner', author_name: 'Owner', created_at: '11:20 AM', body: 'That was mine — thank you all. Two years of work on that drive.' },
+    ],
+  },
+  {
+    id: 3, author_username: 'elbert', author_name: 'Elbert', tag: 'question', topic: 'Questions',
+    created_at: 'Yesterday', location_text: 'Riverside', helpful_count: 0, is_removed: false,
+    title: 'How long does the desk hold handed-in items?',
+    body: 'Dropped a wallet at the park office last week and it is still showing Active. Does the holding period reset after a claim?',
+    replies: [
+      { id: 1, author_username: 'sara', author_name: 'Sara', created_at: 'Yesterday', body: 'Most desks hold items 90 days. The status only flips to Resolved once a claim is verified by a moderator.' },
+    ],
+  },
+];
+
+/** Forum filter topics, in the prototype's order. */
+export const FORUM_TOPICS = ['All', 'Sightings', 'Reunited', 'Questions'] as const;
+
+// -- Ads (prototype CAMPAIGNS + ADS) ------------------------------------------
+
+export const AD_CAMPAIGNS: AdCampaign[] = [
+  { short_code: 'AD-01', campaign_name: 'KeySmart tags — 20% off', advertiser_name: 'KeySmart', screen_slot: 'home', slot_description: 'Below community activity', format: 'Native strip', size: '320 × 104', icon: 'key', cpm: 14, days: 30, days_left: 18, is_live: true, impressions: 41200, clicks: 989, revenue: 1240 },
+  { short_code: 'AD-02', campaign_name: 'CityLock 24h locksmith', advertiser_name: 'CityLock', screen_slot: 'registry', slot_description: 'In-feed, after 4th listing', format: 'In-feed card', size: 'In-feed', icon: 'lock', cpm: 22, days: 14, days_left: 6, is_live: true, impressions: 88400, clicks: 2740, revenue: 2860 },
+  { short_code: 'AD-03', campaign_name: 'PhoneMedic screen repair', advertiser_name: 'PhoneMedic', screen_slot: 'forum', slot_description: 'Above the first thread', format: 'In-feed card', size: 'In-feed', icon: 'smartphone', cpm: 18, days: 7, days_left: 0, is_live: false, impressions: 12900, clicks: 155, revenue: 430 },
+  { short_code: 'AD-04', campaign_name: 'Trackr bag tracker bundle', advertiser_name: 'Trackr', screen_slot: 'report_success', slot_description: 'Confirmation sheet', format: 'Single offer', size: '320 × 88', icon: 'my_location', cpm: 26, days: 30, days_left: 24, is_live: true, impressions: 9400, clicks: 526, revenue: 1980 },
+];
+
+/** Rate card, the prototype's CAMPAIGNS list for the campaign picker. */
+export const RATE_CARD = [
+  { key: 'keysmart', campaign: 'KeySmart tags — 20% off', advertiser: 'KeySmart', icon: 'key', rate: '$14 CPM', cpm: 14 },
+  { key: 'citylock', campaign: 'CityLock 24h locksmith', advertiser: 'CityLock', icon: 'lock', rate: '$22 CPM', cpm: 22 },
+  { key: 'phonemedic', campaign: 'PhoneMedic screen repair', advertiser: 'PhoneMedic', icon: 'smartphone', rate: '$18 CPM', cpm: 18 },
+  { key: 'trackr', campaign: 'Trackr bag tracker bundle', advertiser: 'Trackr', icon: 'my_location', rate: '$26 CPM', cpm: 26 },
+] as const;
+
+/** ctr is clicks/impressions; the prototype stores it, ad_stats derives it. */
+export const ctr = (a: AdCampaign): number => Math.round((a.clicks / a.impressions) * 1000) / 10;
+
+export const money = (n: number): string => `$${n.toLocaleString('en-US')}`;
+export const compact = (n: number): string =>
+  n >= 1000 ? `${(n / 1000).toFixed(n >= 10000 ? 0 : 1)}K` : String(n);
+
+// -- Moderation (prototype FLAGGED) -------------------------------------------
+
+export const MODERATION_FLAGS: ModerationFlag[] = [
+  { target_code: 'LOST-1031', target_type: 'item', title: 'Samsung Galaxy S24', author_username: 'alex.j', category: 'Electronics', reason: 'Unverified ownership claim', created_at: '2024-06-05' },
+  { target_code: 'FOUND-2009', target_type: 'item', title: 'iPhone 15', author_username: 'subway.finder', category: 'Electronics', reason: 'Suspicious contact info', created_at: '2024-06-06' },
+  { target_code: 'POST-091', target_type: 'thread', title: 'Lost: Vintage Polaroid Camera', author_username: 'emily.c', category: 'Forum', reason: 'Spam / Repeated links', created_at: '2024-06-07' },
+];
+
+/** Community scouts strip on the dashboard — avatar initials only. */
+export const SCOUTS = ['GL', 'EB', 'DA', 'JO', 'MA'] as const;
+
+// -- Messaging (prototype CONVOS + CHAT_SEED) ---------------------------------
+
+export const CONVERSATIONS: Conversation[] = [
+  {
+    item_short_code: 'FOUND-2015', with_username: 'cafe.5th', item_title: 'Silver Watch',
+    icon: 'watch', unread: 2, last_message_at: '09:15',
+    messages: [
+      { sender: 'me', created_at: '09:02', body: 'Hi, I think the watch you handed in is mine. Lost it near 5th Ave on Sunday.' },
+      { sender: 'them', created_at: '09:11', body: "Could be! Can you tell me what's engraved on the back?" },
+      { sender: 'them', created_at: '09:15', body: "I'm at the café until 6 today if you want to collect it." },
+    ],
+  },
+  {
+    item_short_code: 'FOUND-1990', with_username: 'campus.desk', item_title: 'Student ID Card',
+    icon: 'badge', unread: 0, last_message_at: 'Yesterday',
+    messages: [
+      { sender: 'them', created_at: '16:40', body: "Your ID is at the cafeteria desk. Bring any second ID and it's yours." },
+      { sender: 'me', created_at: '17:02', body: "Perfect, I'll come by tomorrow morning. Thank you!" },
+    ],
+  },
+];
+
+/** Opening messages for a claim chat opened from an item. */
+export const CHAT_SEED: Message[] = [
+  { sender: 'them', created_at: '09:12', body: "Hi! I'm the one who handed this in. Can you describe anything unique about it so I can verify?" },
+  { sender: 'me', created_at: '09:14', body: "Sure — there's a small scratch on the clasp and a folded metro ticket tucked inside." },
+  { sender: 'them', created_at: '09:15', body: 'That matches. Happy to hand it over. Would you rather meet up or should I post it?' },
+];
+
+// -- Support (prototype FAQ + SUPPORT_SEED) -----------------------------------
+
+export const FAQS: Faq[] = [
+  { question: 'How do I report an item?', keywords: ['report', 'post', 'upload', 'submit'], answer: "Super easy! Tap the + button, upload a photo, add a description (colour, brand, location found), and submit. You'll get notifications when potential owners reach out. The whole process takes less than 2 minutes!" },
+  { question: 'How can I claim an item?', keywords: ['claim', 'mine', 'owner', 'collect'], answer: 'Found your lost item? Open the item and use our secure messaging to contact the finder. Verify ownership by describing unique features only you would know, then arrange a safe meetup in a public place to collect it.' },
+  { question: "What if I can't find my lost item?", keywords: ["can't find", 'cannot find', 'no match', 'nothing', 'missing'], answer: "Don't give up! Create a lost item post with detailed descriptions, photos and location. Enable notifications to get instant alerts when matching items are reported, and check back regularly — new items are added daily." },
+  { question: 'Is the platform free?', keywords: ['free', 'cost', 'price', 'pay', 'fee', 'premium'], answer: 'Absolutely! Lost Items Community is 100% free forever. No hidden fees, no premium plans, no catch. Create unlimited posts, search the entire registry, and message other users completely free.' },
+  { question: 'Is meeting a stranger safe?', keywords: ['safe', 'safety', 'meet', 'stranger', 'scam'], answer: 'Always meet in a busy public place during daylight, bring someone with you if you can, and never send money upfront. Verify ownership in chat first — and report anything suspicious so a moderator can review it.' },
+];
+
+export const SUPPORT_SEED: SupportMessage[] = [
+  { sender: 'bot', created_at: '09:00', body: "Hi! I'm the Community Assistant. Ask me anything about reporting, claiming or staying safe — or pick a question below." },
+];
+
+/** The prototype's bot lookup: exact question first, then keyword contains. */
+export const answerFor = (text: string): string => {
+  const low = text.trim().toLowerCase();
+  const hit =
+    FAQS.find((f) => f.question.toLowerCase() === low) ??
+    FAQS.find((f) => f.keywords.some((k) => low.includes(k)));
+  return hit
+    ? hit.answer
+    : "I'm not sure about that one yet. A human moderator can pick this up — tap Escalate and someone will reply here.";
+};
+
+/** Initials from a handle, as the prototype's initials() helper derives them. */
+export const initials = (handle: string): string => {
+  const parts = String(handle || '').split(/[.@_-]/).filter(Boolean);
+  const s = parts.length > 1 ? parts[0][0] + parts[parts.length - 1][0] : String(handle || '?').slice(0, 2);
+  return s.toUpperCase();
 };
