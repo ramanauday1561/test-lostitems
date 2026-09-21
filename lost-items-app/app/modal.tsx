@@ -13,7 +13,7 @@ export default function UserOverlayModal() {
   const displayName = username || 'User Profile';
 
   return (
-    <BottomSheet isOpen={true} onClose={() => router.back()}>
+    <BottomSheet isOpen onClose={() => router.back()}>
       {/* User header */}
       <View className="items-center mt-2">
         <LinearGradient

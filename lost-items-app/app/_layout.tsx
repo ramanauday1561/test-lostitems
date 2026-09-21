@@ -95,9 +95,9 @@ function RootLayoutNav() {
 
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <Contained>
-        <ToastContainer />
-        <Stack screenOptions={{ headerShown: false }}>
+      <View className="flex-1">
+        <Contained>
+          <Stack screenOptions={{ headerShown: false }}>
           {/* Signed out sees onboarding and login; signed in sees the app. */}
           <Stack.Protected guard={!session}>
             <Stack.Screen name="(auth)" />
@@ -105,7 +105,7 @@ function RootLayoutNav() {
 
           <Stack.Protected guard={!!session}>
             <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-          <Stack.Screen name="modal" options={{ presentation: 'modal' }} />
+          <Stack.Screen name="modal" options={{ presentation: 'transparentModal' }} />
           {/* DESIGN.md sec.9 calls a full-page route for a secondary flow an
               anti-pattern, so the item route that INSTRUCTIONS 3.1 requires is
               presented as a sheet. */}
@@ -123,7 +123,9 @@ function RootLayoutNav() {
               session flips and the guards re-resolve. */}
           <Stack.Screen name="guidelines" options={{ presentation: 'modal', headerShown: false }} />
         </Stack>
-      </Contained>
+        </Contained>
+        <ToastContainer />
+      </View>
     </ThemeProvider>
   );
 }

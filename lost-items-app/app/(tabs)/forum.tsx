@@ -7,6 +7,7 @@ import { Icon } from '@/src/components/Icon';
 import { FORUM_THREADS, FORUM_TOPICS, initials } from '@/src/data/mockData';
 import { SHADOW, SHADOW_PILL_OFF, SHADOW_PILL_ON, STATUS_HEX } from '@/src/design';
 import { useSession } from '@/src/session';
+import { useToast } from '@/src/context/ToastContext';
 
 /** Tag chip hues: Sighting is the action blue, Reunited green, Question muted. */
 const TAG_HEX: Record<string, string> = {
@@ -22,6 +23,7 @@ const TAG_LABEL: Record<string, string> = {
 
 export default function ForumScreen() {
   const { session } = useSession();
+  const { showToast } = useToast();
   const [topic, setTopic] = useState<string>('All');
   const admin = session?.role === 'admin';
 
@@ -126,10 +128,16 @@ export default function ForumScreen() {
 
               {admin && (
                 <View className="mt-2 flex-row gap-2 border-t border-[#F0F0ED] pt-3">
-                  <Pressable accessibilityRole="button" className="min-h-[44px] flex-1 items-center justify-center rounded-chip bg-subtle active:scale-[.97]">
+                  <Pressable
+                    onPress={() => showToast('User suspended', 'info')}
+                    accessibilityRole="button"
+                    className="min-h-[44px] flex-1 items-center justify-center rounded-chip bg-subtle active:scale-[.97]">
                     <Text className="font-sans-bold text-[12.5px] text-ink">Suspend</Text>
                   </Pressable>
-                  <Pressable accessibilityRole="button" className="min-h-[44px] flex-1 flex-row items-center justify-center gap-1.5 rounded-chip bg-danger/10 active:scale-[.97]">
+                  <Pressable
+                    onPress={() => showToast('Post deleted', 'success')}
+                    accessibilityRole="button"
+                    className="min-h-[44px] flex-1 flex-row items-center justify-center gap-1.5 rounded-chip bg-danger/10 active:scale-[.97]">
                     <Icon name="delete" size={17} color="#B42318" />
                     <Text className="font-sans-bold text-[12.5px] text-danger">Delete post</Text>
                   </Pressable>
