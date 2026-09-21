@@ -17,7 +17,7 @@ export default function ProfileScreen() {
 
   return (
     <View className="flex-1 bg-canvas">
-      <View className="flex-row items-center px-5 pt-3">
+      <View className="flex-row items-center px-5 pt-5">
         <Pressable
           onPress={() => router.back()}
           accessibilityRole="button"

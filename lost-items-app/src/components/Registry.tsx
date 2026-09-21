@@ -81,7 +81,7 @@ export const Registry = ({ kind }: { kind: ItemKind }) => {
         </ScrollView>
       </View>
 
-      <View className="gap-2 px-5 pb-8 pt-3">
+      <View className="gap-2 px-5 pb-8 pt-5">
         {registry.map((item) => (
           <ItemCard key={item.id} item={item} onPress={() => router.push(`/item/${item.short_code}`)} />
         ))}

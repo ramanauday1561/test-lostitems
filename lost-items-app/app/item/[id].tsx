@@ -3,7 +3,7 @@ import { router, useLocalSearchParams } from 'expo-router';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 
 import { Icon } from '@/src/components/Icon';
-import { ME, displayStatus, formatDate, getItem } from '@/src/data/mockData';
+import { ME, displayStatus, formatDate, getItem, initials } from '@/src/data/mockData';
 import { SHADOW, STATUS_HEX } from '@/src/design';
 
 export default function ItemDetailScreen() {
@@ -30,12 +30,11 @@ export default function ItemDetailScreen() {
     { k: 'Status', v: status },
     { k: 'Where', v: item.location_text },
     { k: 'When', v: formatDate(item.date_occurred) },
-    { k: 'Submitted by', v: item.reporter_username },
   ];
 
   return (
     <View className="flex-1 bg-canvas">
-      <View className="flex-row items-center px-5 pt-3">
+      <View className="flex-row items-center px-5 pt-5">
         <Pressable
           onPress={() => router.back()}
           accessibilityRole="button"
@@ -93,6 +92,25 @@ export default function ItemDetailScreen() {
           ))}
         </View>
 
+        {/* Reporter info with user profile opener */}
+        <Pressable
+          onPress={() => router.push('/modal')}
+          accessibilityRole="button"
+          className="mt-4 flex-row items-center gap-3 rounded-[22px] bg-primary/[0.07] p-3">
+          <LinearGradient
+            colors={['#F4F4F2', '#E7E7E3']}
+            start={{ x: 0.25, y: 0 }}
+            end={{ x: 0.75, y: 1 }}
+            style={{ width: 40, height: 40, borderRadius: 20, alignItems: 'center', justifyContent: 'center' }}>
+            <Text className="font-mono text-[11px] text-ink-muted">{initials(item.reporter_username)}</Text>
+          </LinearGradient>
+          <View className="min-w-0 flex-1">
+            <Text className="font-sans-bold text-[13.5px] text-ink">{item.reporter_username}</Text>
+            <Text className="mt-0.5 font-sans-md text-[11px] text-ink-soft">Submitted this item</Text>
+          </View>
+          <Icon name="info" size={20} color="#0B6BCB" />
+        </Pressable>
+
         {isOwner && (
           <View className="mt-3 rounded-[22px] bg-primary/[0.07] p-4">
             <View className="flex-row items-center gap-[9px]">
@@ -109,6 +127,7 @@ export default function ItemDetailScreen() {
 
         {canClaim && (
           <Pressable
+            onPress={() => router.push(`/messages/${item.short_code}`)}
             accessibilityRole="button"
             className="mt-5 min-h-[56px] items-center justify-center rounded-btn bg-primary active:scale-[.98]"
             style={{ boxShadow: SHADOW.primaryButton }}>

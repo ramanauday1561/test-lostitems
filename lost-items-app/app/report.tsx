@@ -56,7 +56,7 @@ export default function ReportScreen() {
 
   return (
     <View className="flex-1 bg-canvas">
-      <View className="flex-row items-center px-5 pt-3">
+      <View className="flex-row items-center px-5 pt-5">
         <Pressable
           onPress={() => (step === 2 ? setStep(1) : router.back())}
           accessibilityRole="button"
@@ -66,7 +66,7 @@ export default function ReportScreen() {
         </Pressable>
       </View>
 
-      <ScrollView contentContainerClassName="px-6 pb-8 pt-2" keyboardShouldPersistTaps="handled">
+      <ScrollView contentContainerClassName="px-6 pb-8 pt-4" keyboardShouldPersistTaps="handled">
         <View className="flex-row gap-1.5">
           <View className="h-1 flex-1 rounded-full bg-primary" />
           <View className={`h-1 flex-1 rounded-full ${step === 2 ? 'bg-primary' : 'bg-[#EAEAE7]'}`} />

@@ -25,7 +25,7 @@ export default function SupportScreen() {
 
   return (
     <View className="flex-1 bg-canvas">
-      <View className="flex-row items-center gap-3 px-5 pt-3">
+      <View className="flex-row items-center gap-3 px-5 pt-5">
         <Pressable
           onPress={() => router.back()}
           accessibilityRole="button"
@@ -76,7 +76,7 @@ export default function SupportScreen() {
         </View>
       </ScrollView>
 
-      <View className="flex-row items-center gap-2 px-5 pb-6 pt-2">
+      <View className="flex-row items-center gap-2 px-5 pb-6 pt-4">
         <View className="min-h-[52px] flex-1 flex-row items-center rounded-panel bg-surface px-[18px]" style={{ boxShadow: SHADOW.resting }}>
           <TextInput
             value={draft}
