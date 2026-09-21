@@ -9,16 +9,15 @@ import { SHADOW } from '@/src/design';
 export default function ChatScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
   const convo = CONVERSATIONS.find((c) => c.item_short_code === id);
+
+  // Handle new conversations from modal (format: msg-username)
+  const isMsgFormat = id?.startsWith('msg-');
+  const withUsername = isMsgFormat ? (id?.replace(/^msg-/, '').replace(/-/g, ' ') ?? 'User') : convo?.with_username;
+  const itemTitle = isMsgFormat ? 'New Message' : convo?.item_title;
+  const itemCode = isMsgFormat ? id : convo?.item_short_code;
+
   const [messages, setMessages] = useState<Message[]>(convo?.messages ?? []);
   const [draft, setDraft] = useState('');
-
-  if (!convo) {
-    return (
-      <View className="flex-1 items-center justify-center bg-canvas px-6">
-        <Text className="font-sans-bold text-[15px] text-ink">Conversation not found</Text>
-      </View>
-    );
-  }
 
   const send = () => {
     const t = draft.trim();
@@ -40,9 +39,9 @@ export default function ChatScreen() {
           <Icon name="arrow_back" size={22} color="#16181F" />
         </Pressable>
         <View className="min-w-0 flex-1">
-          <Text numberOfLines={1} className="font-sans-bold text-[15px] text-ink">{convo.item_title}</Text>
+          <Text numberOfLines={1} className="font-sans-bold text-[15px] text-ink">{itemTitle}</Text>
           <Text className="font-mono text-[10.5px] text-ink-faintest">
-            {convo.item_short_code} · {convo.with_username}
+            {itemCode} · {withUsername}
           </Text>
         </View>
       </View>
