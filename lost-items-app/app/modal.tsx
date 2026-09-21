@@ -66,7 +66,10 @@ export default function UserOverlayModal() {
           {/* Actions */}
           <View className="mt-6 gap-2">
             <Pressable
-              onPress={() => router.back()}
+              onPress={() => {
+                router.back();
+                router.push(`/messages/msg-${displayName.toLowerCase().replace(/\s+/g, '-')}`);
+              }}
               accessibilityRole="button"
               className="min-h-[52px] flex-row items-center gap-3 rounded-row bg-surface px-4 active:scale-[.985]"
               style={{ boxShadow: SHADOW.resting }}>
@@ -76,7 +79,10 @@ export default function UserOverlayModal() {
             </Pressable>
 
             <Pressable
-              onPress={() => router.back()}
+              onPress={() => {
+                router.back();
+                router.push('/profile');
+              }}
               accessibilityRole="button"
               className="min-h-[52px] flex-row items-center gap-3 rounded-row bg-surface px-4 active:scale-[.985]"
               style={{ boxShadow: SHADOW.resting }}>
@@ -86,7 +92,10 @@ export default function UserOverlayModal() {
             </Pressable>
 
             <Pressable
-              onPress={() => router.back()}
+              onPress={() => {
+                router.back();
+                router.push('/report');
+              }}
               accessibilityRole="button"
               className="min-h-[52px] flex-row items-center gap-3 rounded-row bg-surface px-4 active:scale-[.985]"
               style={{ boxShadow: SHADOW.resting }}>

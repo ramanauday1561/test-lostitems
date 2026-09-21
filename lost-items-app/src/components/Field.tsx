@@ -5,18 +5,30 @@ import { Icon } from './Icon';
 
 /** The prototype's input row: white, 18px radius, 56px min-height, leading glyph. */
 export const Field = ({
-  icon, trailing, className, ...input
-}: TextInputProps & { icon: string; trailing?: React.ReactNode; className?: string }) => (
-  <View
-    className={`min-h-[56px] flex-row items-center gap-3 rounded-row bg-surface p-4 ${className ?? ''}`}
-    style={{ boxShadow: SHADOW.resting }}>
-    <Icon name={icon} size={21} color="#9a9ea4" />
-    <TextInput
-      placeholderTextColor="#9a9ea4"
-      className="min-w-0 flex-1 font-sans-md text-[15.5px] text-ink"
-      {...input}
-    />
-    {trailing}
+  icon, trailing, className, error, disabled, ...input
+}: TextInputProps & {
+  icon: string;
+  trailing?: React.ReactNode;
+  className?: string;
+  error?: string;
+  disabled?: boolean;
+}) => (
+  <View>
+    <View
+      className={`min-h-[56px] flex-row items-center gap-3 rounded-row bg-surface p-4 ${
+        error ? 'border border-danger' : ''
+      } ${disabled ? 'opacity-50' : ''} ${className ?? ''}`}
+      style={{ boxShadow: SHADOW.resting }}>
+      <Icon name={icon} size={21} color="#9a9ea4" />
+      <TextInput
+        placeholderTextColor="#9a9ea4"
+        className="min-w-0 flex-1 font-sans-md text-[15.5px] text-ink"
+        editable={!disabled}
+        {...input}
+      />
+      {trailing}
+    </View>
+    {error && <ErrorBlock message={error} />}
   </View>
 );
 

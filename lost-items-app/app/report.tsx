@@ -18,9 +18,18 @@ export default function ReportScreen() {
   const [place, setPlace] = useState('');
   const [when, setWhen] = useState('');
   const [desc, setDesc] = useState('');
+  const [showErrors, setShowErrors] = useState(false);
 
   const newId = kind === 'lost' ? 'LOST-1032' : 'FOUND-2019';
   const canContinue = step === 1 ? title.trim() !== '' && category !== '' : place.trim() !== '';
+  const handleContinue = () => {
+    if (!canContinue) {
+      setShowErrors(true);
+      return;
+    }
+    setStep(step === 1 ? 2 : 3);
+    setShowErrors(false);
+  };
 
   if (step === 3) {
     return (
@@ -104,8 +113,16 @@ export default function ReportScreen() {
               placeholder="Black leather wallet"
               placeholderTextColor="#a8acb2"
               accessibilityLabel="What is it"
-              className="mb-6 mt-2.5 min-h-[52px] rounded-row bg-subtle px-4 font-sans-md text-[15.5px] text-ink"
+              className={`mt-2.5 min-h-[52px] rounded-row bg-subtle px-4 font-sans-md text-[15.5px] text-ink ${
+                showErrors && !title.trim() ? 'border border-danger' : ''
+              } ${showErrors && !title.trim() ? 'mb-3' : 'mb-6'}`}
             />
+            {showErrors && !title.trim() && (
+              <View className="mb-6 flex-row gap-2 rounded-chip bg-danger/[0.08] px-3 py-2.5">
+                <Icon name="error" size={16} color="#B42318" />
+                <Text className="flex-1 font-sans-md text-[12px] text-danger">This field is required</Text>
+              </View>
+            )}
             <Label>Category</Label>
             <View className="mt-3 flex-row flex-wrap gap-2">
               {CATEGORIES.map((c) => {
@@ -124,6 +141,12 @@ export default function ReportScreen() {
                 );
               })}
             </View>
+            {showErrors && !category && (
+              <View className="mt-3 flex-row gap-2 rounded-chip bg-danger/[0.08] px-3 py-2.5">
+                <Icon name="error" size={16} color="#B42318" />
+                <Text className="flex-1 font-sans-md text-[12px] text-danger">Please select a category</Text>
+              </View>
+            )}
           </View>
         ) : (
           <View className="mt-6">
@@ -134,8 +157,16 @@ export default function ReportScreen() {
               placeholder="Union Square subway station"
               placeholderTextColor="#a8acb2"
               accessibilityLabel="Where"
-              className="mb-5 mt-2.5 min-h-[52px] rounded-row bg-subtle px-4 font-sans-md text-[15.5px] text-ink"
+              className={`mt-2.5 min-h-[52px] rounded-row bg-subtle px-4 font-sans-md text-[15.5px] text-ink ${
+                showErrors && !place.trim() ? 'border border-danger' : ''
+              } ${showErrors && !place.trim() ? 'mb-3' : 'mb-5'}`}
             />
+            {showErrors && !place.trim() && (
+              <View className="mb-5 flex-row gap-2 rounded-chip bg-danger/[0.08] px-3 py-2.5">
+                <Icon name="error" size={16} color="#B42318" />
+                <Text className="flex-1 font-sans-md text-[12px] text-danger">This field is required</Text>
+              </View>
+            )}
             <Label>When</Label>
             <TextInput
               value={when}
@@ -164,7 +195,7 @@ export default function ReportScreen() {
         )}
 
         <Pressable
-          onPress={() => (step === 1 ? setStep(2) : setStep(3))}
+          onPress={handleContinue}
           disabled={!canContinue}
           accessibilityRole="button"
           accessibilityState={{ disabled: !canContinue }}
