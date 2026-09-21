@@ -90,9 +90,12 @@ export default function SupportScreen() {
         </View>
         <Pressable
           onPress={() => ask(draft)}
+          disabled={!draft.trim()}
           accessibilityRole="button"
           accessibilityLabel="Send"
-          className="h-[52px] w-[52px] flex-none items-center justify-center rounded-btn bg-primary active:scale-[.92]"
+          className={`h-[52px] w-[52px] flex-none items-center justify-center rounded-btn bg-primary active:scale-[.92] ${
+            !draft.trim() ? 'opacity-50' : ''
+          }`}
           style={{ boxShadow: '0 10px 22px -8px rgba(11,107,203,.85)' }}>
           <Icon name="send" size={22} color="#fff" />
         </Pressable>
