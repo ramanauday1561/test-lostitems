@@ -5,8 +5,10 @@ import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { Icon } from '@/src/components/Icon';
 import { MEMBERS, formatDate, initials } from '@/src/data/mockData';
 import { SHADOW, SHADOW_SEARCH } from '@/src/design';
+import { useToast } from '@/src/context/ToastContext';
 
 export default function MembersScreen() {
+  const { showToast } = useToast();
   const [query, setQuery] = useState('');
   const [members, setMembers] = useState(MEMBERS);
 
@@ -60,7 +62,10 @@ export default function MembersScreen() {
               </View>
               <View className="mt-3.5 flex-row gap-2">
                 <Pressable
-                  onPress={() => toggle(m.id)}
+                  onPress={() => {
+                    toggle(m.id);
+                    showToast(m.is_suspended ? `${m.full_name} restored` : `${m.full_name} suspended`, 'info');
+                  }}
                   accessibilityRole="button"
                   className="min-h-[44px] flex-1 items-center justify-center rounded-chip bg-subtle active:scale-[.97]">
                   <Text className="font-sans-bold text-[13px] text-ink">
@@ -68,7 +73,10 @@ export default function MembersScreen() {
                   </Text>
                 </Pressable>
                 <Pressable
-                  onPress={() => setMembers((ms) => ms.filter((x) => x.id !== m.id))}
+                  onPress={() => {
+                    setMembers((ms) => ms.filter((x) => x.id !== m.id));
+                    showToast(`User ${m.full_name} deleted`, 'success');
+                  }}
                   accessibilityRole="button"
                   className="min-h-[44px] flex-1 flex-row items-center justify-center gap-1.5 rounded-chip bg-danger/10 active:scale-[.97]">
                   <Icon name="delete" size={18} color="#B42318" />
