@@ -5,12 +5,14 @@ import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { Icon } from '@/src/components/Icon';
 import { CATEGORIES, type ItemKind } from '@/src/data/mockData';
 import { SHADOW } from '@/src/design';
+import { useToast } from '@/src/context/ToastContext';
 
 const Label = ({ children }: { children: string }) => (
   <Text className="font-mono text-[10px] uppercase tracking-[1.4px] text-ink-soft">{children}</Text>
 );
 
 export default function ReportScreen() {
+  const { showToast } = useToast();
   const [step, setStep] = useState<1 | 2 | 3>(1);
   const [kind, setKind] = useState<ItemKind>('lost');
   const [title, setTitle] = useState('');
@@ -26,6 +28,9 @@ export default function ReportScreen() {
     if (!canContinue) {
       setShowErrors(true);
       return;
+    }
+    if (step === 2) {
+      showToast('Item submitted to registry', 'success');
     }
     setStep(step === 1 ? 2 : 3);
     setShowErrors(false);

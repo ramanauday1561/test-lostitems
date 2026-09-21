@@ -262,6 +262,42 @@ export const CONVERSATIONS: Conversation[] = [
       { sender: 'me', created_at: '17:02', body: "Perfect, I'll come by tomorrow morning. Thank you!" },
     ],
   },
+  {
+    item_short_code: 'FOUND-2018', with_username: 'j.rivera', item_title: 'Black Wallet',
+    icon: 'account_balance_wallet', unread: 1, last_message_at: '14:22',
+    messages: [
+      { sender: 'them', created_at: '14:18', body: 'I found your wallet at Riverside Park! There are cards inside with your name.' },
+      { sender: 'me', created_at: '14:19', body: 'Oh wow, thank you so much! Can we meet this weekend?' },
+      { sender: 'them', created_at: '14:22', body: 'Sure! Saturday afternoon at the park entrance around 2pm works for me.' },
+    ],
+  },
+  {
+    item_short_code: 'FOUND-2009', with_username: 'subway.finder', item_title: 'iPhone 15',
+    icon: 'smartphone', unread: 0, last_message_at: 'Two days ago',
+    messages: [
+      { sender: 'them', created_at: '11:45', body: 'I found an iPhone 15 at Union Square station. It was locked but the case has your name on it.' },
+      { sender: 'me', created_at: '12:10', body: 'That\'s definitely mine! I was so worried. How can I get it back?' },
+      { sender: 'them', created_at: '12:15', body: 'I have it at the station information desk under your name. You can pick it up anytime before 8pm.' },
+    ],
+  },
+  {
+    item_short_code: 'LOST-1024', with_username: 'emily.c', item_title: 'Blue Jansport backpack',
+    icon: 'backpack', unread: 1, last_message_at: '10:30',
+    messages: [
+      { sender: 'them', created_at: '10:25', body: 'Hi! I think I might have seen your backpack at Central Station. Can you describe what was inside?' },
+      { sender: 'me', created_at: '10:27', body: 'Yes! There should be a grey hoodie and a notebook with stickers on it.' },
+      { sender: 'them', created_at: '10:30', body: 'Perfect match! I have it. Can you come pick it up today?' },
+    ],
+  },
+  {
+    item_short_code: 'LOST-1031', with_username: 'alex.j', item_title: 'Samsung Galaxy S24',
+    icon: 'smartphone', unread: 0, last_message_at: 'Last week',
+    messages: [
+      { sender: 'them', created_at: '08:00', body: 'I saw someone with a phone matching your description on bus 14 yesterday!' },
+      { sender: 'me', created_at: '08:30', body: 'Really? Do you know if they got off? That\'s exactly where I lost mine!' },
+      { sender: 'them', created_at: '08:45', body: 'They got off at the downtown stop. You might want to check the lost and found there.' },
+    ],
+  },
 ];
 
 /** Opening messages for a claim chat opened from an item. */

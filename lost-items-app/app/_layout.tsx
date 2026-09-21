@@ -18,6 +18,8 @@ import 'react-native-reanimated';
 import '../global.css';
 
 import { useColorScheme } from '@/components/useColorScheme';
+import { ToastContainer } from '@/src/components/ToastContainer';
+import { ToastProvider } from '@/src/context/ToastContext';
 import { SessionProvider, useSession } from '@/src/session';
 
 export {
@@ -62,9 +64,11 @@ export default function RootLayout() {
   }
 
   return (
-    <SessionProvider>
-      <RootLayoutNav />
-    </SessionProvider>
+    <ToastProvider>
+      <SessionProvider>
+        <RootLayoutNav />
+      </SessionProvider>
+    </ToastProvider>
   );
 }
 
@@ -92,6 +96,7 @@ function RootLayoutNav() {
   return (
     <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
       <Contained>
+        <ToastContainer />
         <Stack screenOptions={{ headerShown: false }}>
           {/* Signed out sees onboarding and login; signed in sees the app. */}
           <Stack.Protected guard={!session}>

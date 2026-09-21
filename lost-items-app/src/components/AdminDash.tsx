@@ -2,7 +2,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 
-import { AD_CAMPAIGNS, FOUND_ITEMS, LOST_ITEMS, MODERATION_FLAGS, SCOUTS, money } from '../data/mockData';
+import { AD_CAMPAIGNS, CONVERSATIONS, FOUND_ITEMS, LOST_ITEMS, MODERATION_FLAGS, SCOUTS, money } from '../data/mockData';
 import { SHADOW } from '../design';
 import { Icon } from './Icon';
 
@@ -115,6 +115,41 @@ export const AdminDash = () => {
               className="h-11 w-11 items-center justify-center rounded-full bg-primary/10 active:scale-[.92]">
               <Icon name="arrow_forward" size={20} color="#0B6BCB" />
             </Pressable>
+          </View>
+        </View>
+
+        {/* Conversation & Sentiment Section */}
+        <View className="rounded-panel bg-surface p-5" style={{ boxShadow: SHADOW.prominent }}>
+          <View className="flex-row items-center justify-between gap-3">
+            <View className="min-w-0 flex-1">
+              <Text className="font-sans-xb text-[16px] tracking-[-0.32px] text-ink">Conversation &amp; sentiment</Text>
+              <Pressable
+                onPress={() => router.navigate('/messages')}
+                accessibilityRole="button"
+                className="mt-2 self-start">
+                <Text className="font-sans-bold text-[12px] text-primary">Open hub</Text>
+              </Pressable>
+            </View>
+          </View>
+
+          <View className="mt-5 flex-row gap-3">
+            <View className="min-w-0 flex-1 rounded-row bg-subtle px-3 py-3">
+              <Text className="font-sans-xb text-[18px] text-ink">{CONVERSATIONS.length}</Text>
+              <Text className="mt-1 font-sans-sb text-[10.5px] leading-[13px] text-ink-soft">
+                Active threads
+              </Text>
+            </View>
+            <View className="min-w-0 flex-1 rounded-row bg-subtle px-3 py-3">
+              <Text className="font-sans-xb text-[18px]" style={{ color: '#0F7B3D' }}>94.2%</Text>
+              <Text className="mt-1 font-sans-sb text-[10.5px] leading-[13px] text-ink-soft">
+                Positive
+              </Text>
+            </View>
+          </View>
+
+          <View className="mt-4 flex-row items-center gap-2">
+            <Text className="font-sans-md text-[11.5px] text-ink-soft">Avg response velocity</Text>
+            <Text className="font-sans-bold text-[12px] text-primary">12.4 min</Text>
           </View>
         </View>
 
