@@ -6,12 +6,14 @@ import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { Icon } from '@/src/components/Icon';
 import { FORUM_THREADS, type ForumReply, initials } from '@/src/data/mockData';
 import { SHADOW, STATUS_HEX } from '@/src/design';
+import { useToast } from '@/src/context/ToastContext';
 
 const TAG_HEX: Record<string, string> = { sighting: '#0B6BCB', reunited: STATUS_HEX.Reunited, question: '#6B7280' };
 const TAG_LABEL: Record<string, string> = { sighting: 'Sighting', reunited: 'Reunited', question: 'Question' };
 
 export default function ThreadScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { showToast } = useToast();
   const thread = FORUM_THREADS.find((t) => String(t.id) === id);
   const [replies, setReplies] = useState<ForumReply[]>(thread?.replies ?? []);
   const [draft, setDraft] = useState('');
@@ -31,6 +33,7 @@ export default function ThreadScreen() {
     if (!t) return;
     setReplies([...replies, { id: replies.length + 1, author_username: 'user', author_name: 'Simple User', body: t, created_at: 'Just now' }]);
     setDraft('');
+    showToast('Reply posted', 'success');
   };
 
   return (

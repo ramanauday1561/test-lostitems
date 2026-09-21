@@ -5,8 +5,10 @@ import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { Icon } from '@/src/components/Icon';
 import { FAQS, SUPPORT_SEED, type SupportMessage, answerFor } from '@/src/data/mockData';
 import { SHADOW } from '@/src/design';
+import { useToast } from '@/src/context/ToastContext';
 
 export default function SupportScreen() {
+  const { showToast } = useToast();
   const [messages, setMessages] = useState<SupportMessage[]>(SUPPORT_SEED);
   const [draft, setDraft] = useState('');
 
@@ -21,6 +23,7 @@ export default function SupportScreen() {
       { sender: 'bot', body: answerFor(t), created_at: time },
     ]);
     setDraft('');
+    showToast('Question sent to support team', 'info');
   };
 
   return (

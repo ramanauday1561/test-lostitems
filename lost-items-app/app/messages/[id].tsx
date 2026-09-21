@@ -5,9 +5,11 @@ import { Pressable, ScrollView, Text, TextInput, View } from 'react-native';
 import { Icon } from '@/src/components/Icon';
 import { CONVERSATIONS, type Message } from '@/src/data/mockData';
 import { SHADOW } from '@/src/design';
+import { useToast } from '@/src/context/ToastContext';
 
 export default function ChatScreen() {
   const { id } = useLocalSearchParams<{ id: string }>();
+  const { showToast } = useToast();
   const convo = CONVERSATIONS.find((c) => c.item_short_code === id);
 
   // Handle new conversations from modal (format: msg-username)
@@ -26,6 +28,7 @@ export default function ChatScreen() {
     const time = `${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
     setMessages([...messages, { sender: 'me', body: t, created_at: time }]);
     setDraft('');
+    showToast('Message sent', 'success');
   };
 
   return (
