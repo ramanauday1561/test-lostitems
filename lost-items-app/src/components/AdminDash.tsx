@@ -2,7 +2,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { router } from 'expo-router';
 import { Pressable, ScrollView, Text, View } from 'react-native';
 
-import { AD_CAMPAIGNS, MODERATION_FLAGS, SCOUTS, money } from '../data/mockData';
+import { AD_CAMPAIGNS, FOUND_ITEMS, LOST_ITEMS, MODERATION_FLAGS, SCOUTS, money } from '../data/mockData';
 import { SHADOW } from '../design';
 import { Icon } from './Icon';
 
@@ -10,10 +10,43 @@ export const AdminDash = () => {
   const revenue = money(AD_CAMPAIGNS.reduce((s, a) => s + a.revenue, 0));
   const live = AD_CAMPAIGNS.filter((a) => a.is_live).length;
   const pending = MODERATION_FLAGS.length;
+  const activeLost = LOST_ITEMS.filter((i) => i.status === 'active').length;
+  const resolvedItems = [...FOUND_ITEMS, ...LOST_ITEMS].filter((i) => i.status === 'resolved').length;
 
   return (
     <ScrollView>
-      <View className="gap-4 px-5 pb-8">
+      <View className="gap-4 px-5 pb-8 pt-3">
+        <View className="flex-row gap-2">
+          <Pressable
+            onPress={() => router.navigate('/lost')}
+            accessibilityRole="button"
+            className="min-h-[76px] flex-1 flex-row items-center gap-2 rounded-panel bg-surface px-3 active:scale-[.985]"
+            style={{ boxShadow: SHADOW.prominent }}>
+            <View className="h-10 w-10 flex-none items-center justify-center rounded-chip bg-primary/10">
+              <Icon name="help" size={20} color="#0B6BCB" />
+            </View>
+            <View className="min-w-0 flex-1">
+              <Text className="font-sans-bold text-[13px] text-ink">Active</Text>
+              <Text className="mt-[3px] font-sans-xb text-[18px] text-primary">{activeLost}</Text>
+              <Text className="font-sans-md text-[10px] text-ink-soft">Lost reports</Text>
+            </View>
+          </Pressable>
+          <Pressable
+            onPress={() => router.navigate('/found')}
+            accessibilityRole="button"
+            className="min-h-[76px] flex-1 flex-row items-center gap-2 rounded-panel bg-surface px-3 active:scale-[.985]"
+            style={{ boxShadow: SHADOW.prominent }}>
+            <View className="h-10 w-10 flex-none items-center justify-center rounded-chip bg-success/10">
+              <Icon name="check_circle" size={20} color="#0F7B3D" />
+            </View>
+            <View className="min-w-0 flex-1">
+              <Text className="font-sans-bold text-[13px] text-ink">Resolved</Text>
+              <Text className="mt-[3px] font-sans-xb text-[18px]" style={{ color: '#0F7B3D' }}>{resolvedItems}</Text>
+              <Text className="font-sans-md text-[10px] text-ink-soft">Items reunited</Text>
+            </View>
+          </Pressable>
+        </View>
+
         <Pressable
           onPress={() => router.navigate('/ads')}
           accessibilityRole="button"

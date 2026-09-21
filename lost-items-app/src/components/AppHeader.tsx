@@ -12,7 +12,7 @@ export const AppHeader = ({ kicker, title }: { kicker: string; title: string }) 
   const unread = unreadTotal();
 
   return (
-    <View className="flex-row items-center gap-3 px-5 pb-3 pt-2">
+    <View className="flex-row items-center gap-3 px-5 pb-3 pt-5">
       <View className="min-w-0 flex-1">
         <Text className="font-mono text-[10px] uppercase tracking-[1.4px] text-ink-faint">
           {kicker}
